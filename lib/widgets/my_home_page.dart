@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:f_diary/widgets/article_page.dart';
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -16,7 +17,7 @@ class MyHomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _openArticle();
+          _openArticle(context);
         },
         tooltip: 'Open article',
         child: const Icon(Icons.edit),
@@ -24,7 +25,11 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  void _openArticle() {
-    // 記事ページを開く
+  void _openArticle(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ArticlePage(DateTime.now()),
+        ));
   }
 }
