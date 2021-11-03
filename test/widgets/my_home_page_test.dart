@@ -17,6 +17,8 @@ void main() {
     await tester.tap(find.byIcon(Icons.edit));
     await tester.pump();
 
-    // 記事ページが表示されること
+    var dateTime = DateTime.now();
+    var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+    expect(find.text(titleString, skipOffstage: false), findsOneWidget);
   });
 }
