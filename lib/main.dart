@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:f_diary/global.dart';
 import 'package:f_diary/widgets/my_home_page.dart';
+import 'package:f_diary/objectbox.dart';
+import 'package:f_diary/models.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  objectbox = await ObjectBox.create();
+
+  // ここから動作確認コード
+  final box = objectbox.store.box<Article>();
+  final article = Article(title: 'てすとたいとる', body: 'てすとぼでぃ');
+  box.put(article);
+
+  // ここまで動作確認コード
+
   runApp(const MyApp());
 }
 
