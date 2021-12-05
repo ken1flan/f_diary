@@ -12,8 +12,8 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: const Center(
-        child: Text('Hello!'),
+      body: Center(
+        child: Text(DateTime.now().toString()),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
