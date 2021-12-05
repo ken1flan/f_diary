@@ -21,8 +21,8 @@ class Article {
 
   Article.fromMap(Map<String, Object?> map) {
     id = map['id'] as int;
-    title = map['title'] as String;
-    body = map['body'] as String;
+    title = map['title'] as String?;
+    body = map['body'] as String?;
   }
 }
 
@@ -51,6 +51,17 @@ class ArticleProvider {
         columns: ['id', 'title', 'body'], where: 'id = ?', whereArgs: [id]);
     if (maps.isNotEmpty) {
       return Article.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  static Future<List<Article>?> getAll() async {
+    List<Map<String, Object?>> maps =
+        await db.query('articles', columns: ['id', 'title', 'body']);
+    if (maps.isNotEmpty) {
+      return maps
+          .map((Map<String, Object?> map) => Article.fromMap(map))
+          .toList();
     }
     return null;
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:f_diary/models/article.dart';
 
 class ArticlePage extends StatefulWidget {
   final DateTime dateTime;
@@ -10,6 +11,8 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticleState extends State<ArticlePage> {
+  Article article = Article();
+
   _ArticleState();
 
   @override
@@ -25,10 +28,20 @@ class _ArticleState extends State<ArticlePage> {
                 TextFormField(
                   decoration: const InputDecoration(
                       labelText: 'タイトル', hintText: '今日をひとことでいうとなんですか？'),
+                  onChanged: (value) async {
+                    article.title = value;
+                    article = await ArticleProvider.save(article);
+                    setState(() {});
+                  },
                 ),
                 TextFormField(
-                  decoration: const InputDecoration(labelText: '内容'),
+                  decoration: const InputDecoration(labelText: '本文'),
                   maxLines: 10,
+                  onChanged: (value) async {
+                    article.body = value;
+                    article = await ArticleProvider.save(article);
+                    setState(() {});
+                  },
                 )
               ],
             )));

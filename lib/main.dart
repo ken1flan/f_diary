@@ -2,20 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:f_diary/db_helper.dart';
 import 'package:f_diary/widgets/my_home_page.dart';
 
-import 'package:f_diary/models/article.dart';
-
-import 'package:sqflite/sqflite.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var db = await openDatabase('my_db.db');
   await DbHelper.initialize();
-
-  var article = Article();
-  article.title = 'test title';
-  article.body = 'test body';
-  var x = await ArticleProvider.insert(article);
-  var y = await ArticleProvider.get(x.id!);
 
   runApp(const MyApp());
 }
