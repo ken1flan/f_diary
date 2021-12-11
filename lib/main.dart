@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:f_diary/objectbox.dart';
+import 'package:f_diary/models.dart';
 import 'package:f_diary/widgets/my_home_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  objectbox = await ObjectBox.create();
+
+  // お試し
+  // insertArticleTest();
+
   runApp(const MyApp());
+}
+
+void insertArticleTest() {
+  final articleBox = objectbox.store.box<Article>();
+  final Article a = Article();
+  final article = Article(
+      title: '記事タイトル',
+      body: '記事本文記事本文',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now());
+  articleBox.put(article);
 }
 
 class MyApp extends StatelessWidget {
