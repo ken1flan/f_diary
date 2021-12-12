@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:f_diary/widgets/article_page.dart';
+import 'package:f_diary/objectbox.dart';
+import 'package:f_diary/models.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -13,13 +15,32 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    List<Article> articles = objectbox.store.box<Article>().getAll();
+    var body;
+    if (articles.isEmpty) {
+      body = const Center(child: Text('まだありません。'));
+    } else {
+      var list = articles
+          .map((Article article) => Card(
+                child: InkWell(
+                  onTap: () {
+                    _editArticle(context, article);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(article.title ?? ''),
+                  ),
+                ),
+              ))
+          .toList();
+      body = ListView(children: list);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Text(DateTime.now().toString()),
-      ),
+      body: body,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _openArticle(context);
@@ -31,6 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _openArticle(BuildContext context) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ArticlePage(DateTime.now()),
+        ));
+    setState(() {});
+  }
+
+  void _editArticle(BuildContext context, Article article) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
