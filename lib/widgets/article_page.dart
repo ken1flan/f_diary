@@ -44,12 +44,13 @@ class _ArticleState extends State<ArticlePage> {
                 TextFormField(
                   initialValue: article.body,
                   decoration: const InputDecoration(labelText: '内容'),
-                  maxLines: 10,
+                  minLines: 10,
+                  maxLines: null,
                   onChanged: (value) {
                     article.body = value;
                     save();
                   },
-                )
+                ),
               ],
             )));
   }
