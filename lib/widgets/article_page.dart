@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:objectbox/objectbox.dart';
+import 'package:f_diary/objectbox.dart';
 import 'package:f_diary/models.dart';
 
 class ArticlePage extends StatefulWidget {
@@ -12,11 +14,16 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticleState extends State<ArticlePage> {
-  _ArticleState();
+  late final Box<Article> box;
+  late Article article;
+
+  _ArticleState() {
+    box = objectbox.store.box<Article>();
+  }
 
   @override
   Widget build(BuildContext contest) {
-    var article = widget.article;
+    article = widget.article;
     var dateTime = article.createdAt ?? DateTime.now();
     var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
     return Scaffold(
@@ -29,13 +36,25 @@ class _ArticleState extends State<ArticlePage> {
                   initialValue: article.title,
                   decoration: const InputDecoration(
                       labelText: 'タイトル', hintText: '今日をひとことでいうとなんですか？'),
+                  onChanged: (value) {
+                    article.title = value;
+                    save();
+                  },
                 ),
                 TextFormField(
                   initialValue: article.body,
                   decoration: const InputDecoration(labelText: '内容'),
                   maxLines: 10,
+                  onChanged: (value) {
+                    article.body = value;
+                    save();
+                  },
                 )
               ],
             )));
+  }
+
+  void save() {
+    box.put(article);
   }
 }
