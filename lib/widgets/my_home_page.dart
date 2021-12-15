@@ -16,7 +16,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     List<Article> articles = objectbox.store.box<Article>().getAll();
-    var body;
+    late Widget body;
     if (articles.isEmpty) {
       body = const Center(child: Text('まだありません。'));
     } else {

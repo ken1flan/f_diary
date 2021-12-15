@@ -15,7 +15,6 @@ void main() async {
 
 void insertArticleTest() {
   final articleBox = objectbox.store.box<Article>();
-  final Article a = Article();
   final article = Article(
       title: '記事タイトル',
       body: '記事本文記事本文',
