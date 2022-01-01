@@ -8,9 +8,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../test_helper.dart';
+
+import 'package:f_diary/objectbox.dart';
 import 'package:f_diary/main.dart';
 
 void main() {
+  setUpAll(() async {
+    TestHelper.setUpAll();
+    objectbox = await ObjectBox.create();
+  });
+
   testWidgets('エディットボタンを押したときに記事ページが表示されること', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
@@ -21,4 +29,6 @@ void main() {
     var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
     expect(find.text(titleString, skipOffstage: false), findsOneWidget);
   });
+
+  tearDownAll(() {});
 }
