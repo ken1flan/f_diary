@@ -9,6 +9,8 @@ analysis_task:
     flutter analyze
 
 test_task:
+  objectbox_script: |
+    bash <(curl -s https://raw.githubusercontent.com/objectbox/objectbox-dart/main/install.sh)
   pub_cache:
     folder: ~/.pub-cache
   # test_script: flutter test --machine > report.json
