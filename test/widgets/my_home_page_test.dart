@@ -19,6 +19,10 @@ void main() {
     objectbox = await ObjectBox.create();
   });
 
+  tearDown(() async {
+    TestHelper.tearDown();
+  });
+
   testWidgets('エディットボタンを押したときに記事ページが表示されること', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
