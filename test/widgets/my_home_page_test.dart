@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_helper.dart';
 
 import 'package:f_diary/objectbox.dart';
+import 'package:f_diary/models.dart';
 import 'package:f_diary/main.dart';
 
 void main() {
@@ -23,15 +24,143 @@ void main() {
     TestHelper.tearDown();
   });
 
-  testWidgets('エディットボタンを押したときに記事ページが表示されること', (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
+  group('記事がないとき', () {
+    testWidgets('「まだありません。」と表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
 
-    await tester.tap(find.byIcon(Icons.edit));
-    await tester.pump();
+      expect(find.text('まだありません。'), findsOneWidget);
+    });
 
-    var dateTime = DateTime.now();
-    var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
-    expect(find.text(titleString, skipOffstage: false), findsOneWidget);
+    testWidgets('エディットボタンを押すと今日の記事ページが表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pump();
+
+      var dateTime = DateTime.now();
+      var dateString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+      expect(find.text(dateString, skipOffstage: false), findsOneWidget);
+    });
+  });
+
+  group('今日の記事があるとき', () {
+    setUp(() {
+      final articleBox = objectbox.store.box<Article>();
+      final article = Article(
+          title: '記事タイトル',
+          body: '記事本文記事本文',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now());
+      articleBox.put(article);
+    });
+
+    testWidgets('記事のタイトルが表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      expect(find.text('記事タイトル'), findsOneWidget);
+    });
+
+    testWidgets('エディットボタンを押すと今日の記事ページが表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pump();
+
+      var dateTime = DateTime.now();
+      var dateString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+      expect(find.text(dateString, skipOffstage: false), findsOneWidget);
+    });
+  });
+
+  group('昨日の記事があるとき', () {
+    setUp(() {
+      final articleBox = objectbox.store.box<Article>();
+      final article = Article(
+          title: '記事タイトル',
+          body: '記事本文記事本文',
+          createdAt: DateTime.now().subtract(const Duration(days: 1)),
+          updatedAt: DateTime.now().subtract(const Duration(days: 1)));
+      articleBox.put(article);
+    });
+
+    testWidgets('記事のタイトルが表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      expect(find.text('記事タイトル'), findsOneWidget);
+    });
+
+    testWidgets('エディットボタンを押すと空白の今日の記事ページが表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+
+      var dateTime = DateTime.now();
+      var dateString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+      expect(find.text(dateString, skipOffstage: false), findsOneWidget);
+    });
+  });
+
+  group('今日と昨日の記事があるとき', () {
+    setUp(() {
+      final articleBox = objectbox.store.box<Article>();
+      final articleToday = Article(
+          title: '今日の記事タイトル',
+          body: '今日の記事本文記事本文',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now());
+      articleBox.put(articleToday);
+      final articleYesterday = Article(
+          title: '昨日の記事タイトル',
+          body: '昨日の記事本文記事本文',
+          createdAt: DateTime.now().subtract(const Duration(days: 1)),
+          updatedAt: DateTime.now().subtract(const Duration(days: 1)));
+      articleBox.put(articleYesterday);
+    });
+
+    testWidgets('記事のタイトルが表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      expect(find.text('今日の記事タイトル'), findsOneWidget);
+      expect(find.text('昨日の記事タイトル'), findsOneWidget);
+    });
+
+    testWidgets('エディットボタンを押すと記事ページが表示されること', (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pump();
+
+      var dateTime = DateTime.now();
+      var dateString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+      expect(find.text(dateString, skipOffstage: false), findsOneWidget);
+    });
+
+    testWidgets('昨日の記事のタイトルをタップすると昨日の記事ページが表示されること',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.text('昨日の記事タイトル'));
+      await tester.pumpAndSettle();
+
+      var dateTime = DateTime.now().subtract(const Duration(days: 1));
+      var dateString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+      expect(find.text(dateString, skipOffstage: false), findsOneWidget);
+      // FIXME: 内容についても確認したい
+    });
+
+    testWidgets('今日の記事のタイトルをタップすると今日の記事ページが表示されること',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.text('今日の記事タイトル'));
+      await tester.pumpAndSettle();
+
+      var dateTime = DateTime.now();
+      var dateString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+      expect(find.text(dateString, skipOffstage: false), findsOneWidget);
+      // FIXME: 内容についても確認したい
+    });
   });
 
   tearDownAll(() {});
