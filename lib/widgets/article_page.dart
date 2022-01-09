@@ -44,7 +44,7 @@ class _ArticleState extends State<ArticlePage> {
                 ),
                 TextFormField(
                   initialValue: article.body,
-                  key: const ValueKey('articleTextField'),
+                  key: const ValueKey('bodyTextField'),
                   decoration: const InputDecoration(labelText: '内容'),
                   minLines: 10,
                   maxLines: null,
