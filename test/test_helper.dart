@@ -12,6 +12,10 @@ class TestHelper {
     ObjectBoxSupport.clearAllBox();
   }
 
+  static void tearDownAll() async {
+    ObjectBoxSupport.close();
+  }
+
   static Widget wrapWithMaterial(Widget widget) {
     return MaterialApp(
       home: widget,

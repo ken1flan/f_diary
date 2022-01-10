@@ -20,14 +20,29 @@ void main() {
     objectbox = await ObjectBox.create();
   });
 
+  setUp(() {
+    print('set up!!!');
+    print(objectbox.store.box<Article>().count());
+    print('set up!!!');
+  });
+
   tearDown(() async {
     TestHelper.tearDown();
+  });
+
+  tearDownAll(() async {
+    TestHelper.tearDownAll();
   });
 
   group('記事がないとき', () {
     testWidgets('「まだありません。」と表示されること', (WidgetTester tester) async {
       await tester.pumpWidget(const MyApp());
 
+      print('hoge!!!');
+      print(objectbox.store.box<Article>().count());
+      // print(objectbox.store.box<Article>().getAll().first.title);
+      // print(objectbox.store.box<Article>().getAll().first.createdAt);
+      print('hoge!!!');
       expect(find.text('まだありません。'), findsOneWidget);
     });
 
