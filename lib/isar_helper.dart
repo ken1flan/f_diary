@@ -13,4 +13,15 @@ class IsarHelper {
       directory: (await getApplicationDocumentsDirectory()).path,
     );
   }
+
+  // 書き込み確認
+  static void addSampleArticle() {
+    final article = Article()
+      ..title = 'test title'
+      ..body = 'test body'
+      ..createdAt = DateTime.now()
+      ..updatedAt = DateTime.now();
+    isar.writeTxnSync((isar) => {article.id = isar.articles.putSync(article)});
+    // final allArticles = isar.articles.where().findAllSync();
+  }
 }

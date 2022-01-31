@@ -5,6 +5,7 @@ import 'package:f_diary/widgets/my_home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await IsarHelper.initialize();
+  // IsarHelper.addSampleArticle(); // あとで削除
 
   runApp(const MyApp());
 }
