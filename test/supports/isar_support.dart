@@ -4,7 +4,7 @@ import 'package:f_diary/isar_helper.dart';
 
 class IsarSupport {
   static void initilize() {
-    var directory = "${Directory.current.path}/test_isar";
+    var directory = "${Directory.current.path}/tmp";
     isar = Isar.openSync(schemas: IsarHelper.schemas, directory: directory);
   }
 
