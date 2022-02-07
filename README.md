@@ -25,7 +25,7 @@ samples, guidance on mobile development, and a full API reference.
 [テストのセットアップスクリプト](https://github.com/isar/isar/blob/main/packages/isar_test/tool/setup_tests.sh)を参考に、プロジェクトルートにライブラリのバイナリをコピーしてきます。
 
 ```console
-core_version=2.1.4
+core_version=`cat .isar_version`
 github="https://github.com/isar/isar-core/releases/download/${core_version}"
 curl "${github}/libisar_macos_x64.dylib" -o ./libisar.dylib --create-dirs -L
 ```
