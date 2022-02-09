@@ -5,9 +5,11 @@ import 'package:f_diary/models/article.dart';
 late Isar isar;
 
 class IsarHelper {
+  static var schemas = [ArticleSchema];
+
   static Future<void> initialize() async {
     isar = await Isar.open(
-      schemas: [ArticleSchema],
+      schemas: schemas,
       directory: (await getApplicationDocumentsDirectory()).path,
     );
   }

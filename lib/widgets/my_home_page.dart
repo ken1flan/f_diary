@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+import 'package:f_diary/isar_helper.dart';
+import 'package:f_diary/models/article.dart';
 import 'package:f_diary/widgets/article_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -13,13 +16,32 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    var articles = isar.articles.where().findAllSync();
+    Widget body;
+    if (articles.isEmpty) {
+      body = const Center(child: Text('まだありません。'));
+    } else {
+      var list = articles
+          .map((Article article) => Card(
+                child: InkWell(
+                  onTap: () {
+                    // _editArticle(context, article);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(article.title),
+                  ),
+                ),
+              ))
+          .toList();
+      body = ListView(children: list);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Text(DateTime.now().toString()),
-      ),
+      body: body,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _openArticle(context);
