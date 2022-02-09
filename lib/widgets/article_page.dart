@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:f_diary/models/article.dart';
 
 class ArticlePage extends StatefulWidget {
-  final DateTime dateTime;
+  final Article article;
 
-  const ArticlePage(this.dateTime, {Key? key}) : super(key: key);
+  const ArticlePage(this.article, {Key? key}) : super(key: key);
 
   @override
   _ArticleState createState() => _ArticleState();
@@ -14,7 +15,7 @@ class _ArticleState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext contest) {
-    var dateTime = widget.dateTime;
+    var dateTime = widget.article.createdAt;
     var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
     return Scaffold(
         appBar: AppBar(title: Text(titleString)),

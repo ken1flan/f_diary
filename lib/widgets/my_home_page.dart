@@ -53,10 +53,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _openArticle(BuildContext context) async {
+    var article = Article()
+      ..createdAt = DateTime.now()
+      ..updatedAt = DateTime.now();
     await Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ArticlePage(DateTime.now()),
+          builder: (context) => ArticlePage(article),
         ));
     setState(() {});
   }
