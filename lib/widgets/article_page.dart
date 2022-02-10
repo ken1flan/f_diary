@@ -15,7 +15,8 @@ class _ArticleState extends State<ArticlePage> {
 
   @override
   Widget build(BuildContext contest) {
-    var dateTime = widget.article.createdAt;
+    var article = widget.article;
+    var dateTime = article.createdAt;
     var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
     return Scaffold(
         appBar: AppBar(title: Text(titleString)),
@@ -24,10 +25,12 @@ class _ArticleState extends State<ArticlePage> {
             child: ListView(
               children: [
                 TextFormField(
+                  initialValue: article.title,
                   decoration: const InputDecoration(
                       labelText: 'タイトル', hintText: '今日をひとことでいうとなんですか？'),
                 ),
                 TextFormField(
+                  initialValue: article.body,
                   decoration: const InputDecoration(labelText: '内容'),
                   maxLines: 10,
                 )

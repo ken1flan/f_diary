@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
           .map((Article article) => Card(
                 child: InkWell(
                   onTap: () {
-                    // _editArticle(context, article);
+                    _openArticle(article, context);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -44,7 +44,12 @@ class _MyHomePageState extends State<MyHomePage> {
       body: body,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _openArticle(context);
+          var article = Article()
+            ..title = ''
+            ..body = ''
+            ..createdAt = DateTime.now()
+            ..updatedAt = DateTime.now();
+          _openArticle(article, context);
         },
         tooltip: 'Open article',
         child: const Icon(Icons.edit),
@@ -52,10 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _openArticle(BuildContext context) async {
-    var article = Article()
-      ..createdAt = DateTime.now()
-      ..updatedAt = DateTime.now();
+  void _openArticle(Article article, BuildContext context) async {
     await Navigator.push(
         context,
         MaterialPageRoute(
