@@ -1,3 +1,4 @@
+import 'package:f_diary/isar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:f_diary/models/article.dart';
 
@@ -28,11 +29,25 @@ class _ArticleState extends State<ArticlePage> {
                   initialValue: article.title,
                   decoration: const InputDecoration(
                       labelText: 'タイトル', hintText: '今日をひとことでいうとなんですか？'),
+                  onChanged: (value) {
+                    article.title = value;
+                    article.updatedAt = DateTime.now();
+                    isar.writeTxnSync((isar) {
+                      article.id = isar.articles.putSync(article);
+                    });
+                  },
                 ),
                 TextFormField(
                   initialValue: article.body,
                   decoration: const InputDecoration(labelText: '内容'),
                   maxLines: 10,
+                  onChanged: (value) {
+                    article.body = value;
+                    article.updatedAt = DateTime.now();
+                    isar.writeTxnSync((isar) {
+                      article.id = isar.articles.putSync(article);
+                    });
+                  },
                 )
               ],
             )));
