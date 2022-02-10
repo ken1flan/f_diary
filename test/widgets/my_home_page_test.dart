@@ -35,6 +35,16 @@ void main() {
 
         expect(find.text(article.title, skipOffstage: false), findsOneWidget);
       });
+
+      testWidgets('タイトルをタップしたときに記事ページが表示されること', (WidgetTester tester) async {
+        await tester.pumpWidget(TestHelper.wrapWithMaterial(myHomePage));
+
+        await tester.tap(find.text(article.title));
+        await tester.pumpAndSettle();
+
+        expect(find.text(article.title), findsOneWidget);
+        expect(find.text(article.body), findsOneWidget);
+      });
     });
 
     testWidgets('エディットボタンを押したときに記事ページが表示されること', (WidgetTester tester) async {
