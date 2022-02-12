@@ -27,6 +27,7 @@ class _ArticleState extends State<ArticlePage> {
               children: [
                 TextFormField(
                   initialValue: article.title,
+                  key: const ValueKey('articleTitleTextField'),
                   decoration: const InputDecoration(
                       labelText: 'タイトル', hintText: '今日をひとことでいうとなんですか？'),
                   onChanged: (value) {
@@ -39,6 +40,7 @@ class _ArticleState extends State<ArticlePage> {
                 ),
                 TextFormField(
                   initialValue: article.body,
+                  key: const ValueKey('articleBodyTextField'),
                   decoration: const InputDecoration(labelText: '内容'),
                   maxLines: 10,
                   onChanged: (value) {
