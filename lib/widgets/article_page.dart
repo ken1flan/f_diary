@@ -32,10 +32,7 @@ class _ArticleState extends State<ArticlePage> {
                       labelText: 'タイトル', hintText: '今日をひとことでいうとなんですか？'),
                   onChanged: (value) {
                     article.title = value;
-                    article.updatedAt = DateTime.now();
-                    isar.writeTxnSync((isar) {
-                      article.id = isar.articles.putSync(article);
-                    });
+                    _saveArticle(article);
                   },
                 ),
                 TextFormField(
@@ -45,13 +42,17 @@ class _ArticleState extends State<ArticlePage> {
                   maxLines: 10,
                   onChanged: (value) {
                     article.body = value;
-                    article.updatedAt = DateTime.now();
-                    isar.writeTxnSync((isar) {
-                      article.id = isar.articles.putSync(article);
-                    });
+                    _saveArticle(article);
                   },
                 )
               ],
             )));
+  }
+
+  void _saveArticle(Article article) {
+    article.updatedAt = DateTime.now();
+    isar.writeTxnSync((isar) {
+      article.id = isar.articles.putSync(article);
+    });
   }
 }
