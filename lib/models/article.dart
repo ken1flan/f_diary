@@ -9,6 +9,7 @@ class Article {
 
   late String title;
   late String body;
+  late DateTime postedOn;
   late DateTime createdAt;
   late DateTime updatedAt;
 }

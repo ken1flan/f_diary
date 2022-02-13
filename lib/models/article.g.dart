@@ -17,10 +17,16 @@ extension GetArticleCollection on Isar {
 final ArticleSchema = CollectionSchema(
   name: 'Article',
   schema:
-      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
+      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
   adapter: const _ArticleAdapter(),
   idName: 'id',
-  propertyIds: {'body': 0, 'createdAt': 1, 'title': 2, 'updatedAt': 3},
+  propertyIds: {
+    'body': 0,
+    'createdAt': 1,
+    'postedOn': 2,
+    'title': 3,
+    'updatedAt': 4
+  },
   indexIds: {},
   indexTypes: {},
   linkIds: {},
@@ -44,21 +50,24 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
     dynamicSize += _body.length;
     final value1 = object.createdAt;
     final _createdAt = value1;
-    final value2 = object.title;
-    final _title = BinaryWriter.utf8Encoder.convert(value2);
+    final value2 = object.postedOn;
+    final _postedOn = value2;
+    final value3 = object.title;
+    final _title = BinaryWriter.utf8Encoder.convert(value3);
     dynamicSize += _title.length;
-    final value3 = object.updatedAt;
-    final _updatedAt = value3;
-    final size = dynamicSize + 34;
+    final value4 = object.updatedAt;
+    final _updatedAt = value4;
+    final size = dynamicSize + 42;
 
     rawObj.buffer = alloc(size);
     rawObj.buffer_length = size;
     final buffer = bufAsBytes(rawObj.buffer, size);
-    final writer = BinaryWriter(buffer, 34);
+    final writer = BinaryWriter(buffer, 42);
     writer.writeBytes(offsets[0], _body);
     writer.writeDateTime(offsets[1], _createdAt);
-    writer.writeBytes(offsets[2], _title);
-    writer.writeDateTime(offsets[3], _updatedAt);
+    writer.writeDateTime(offsets[2], _postedOn);
+    writer.writeBytes(offsets[3], _title);
+    writer.writeDateTime(offsets[4], _updatedAt);
   }
 
   @override
@@ -68,8 +77,9 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
     object.body = reader.readString(offsets[0]);
     object.createdAt = reader.readDateTime(offsets[1]);
     object.id = id;
-    object.title = reader.readString(offsets[2]);
-    object.updatedAt = reader.readDateTime(offsets[3]);
+    object.postedOn = reader.readDateTime(offsets[2]);
+    object.title = reader.readString(offsets[3]);
+    object.updatedAt = reader.readDateTime(offsets[4]);
     return object;
   }
 
@@ -84,8 +94,10 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
       case 1:
         return (reader.readDateTime(offset)) as P;
       case 2:
-        return (reader.readString(offset)) as P;
+        return (reader.readDateTime(offset)) as P;
       case 3:
+        return (reader.readString(offset)) as P;
+      case 4:
         return (reader.readDateTime(offset)) as P;
       default:
         throw 'Illegal propertyIndex';
@@ -380,6 +392,54 @@ extension ArticleQueryFilter
     ));
   }
 
+  QueryBuilder<Article, Article, QAfterFilterCondition> postedOnEqualTo(
+      DateTime value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'postedOn',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> postedOnGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'postedOn',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> postedOnLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'postedOn',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> postedOnBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'postedOn',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
+
   QueryBuilder<Article, Article, QAfterFilterCondition> titleEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -557,6 +617,14 @@ extension ArticleQueryWhereSortBy on QueryBuilder<Article, Article, QSortBy> {
     return addSortByInternal('id', Sort.desc);
   }
 
+  QueryBuilder<Article, Article, QAfterSortBy> sortByPostedOn() {
+    return addSortByInternal('postedOn', Sort.asc);
+  }
+
+  QueryBuilder<Article, Article, QAfterSortBy> sortByPostedOnDesc() {
+    return addSortByInternal('postedOn', Sort.desc);
+  }
+
   QueryBuilder<Article, Article, QAfterSortBy> sortByTitle() {
     return addSortByInternal('title', Sort.asc);
   }
@@ -600,6 +668,14 @@ extension ArticleQueryWhereSortThenBy
     return addSortByInternal('id', Sort.desc);
   }
 
+  QueryBuilder<Article, Article, QAfterSortBy> thenByPostedOn() {
+    return addSortByInternal('postedOn', Sort.asc);
+  }
+
+  QueryBuilder<Article, Article, QAfterSortBy> thenByPostedOnDesc() {
+    return addSortByInternal('postedOn', Sort.desc);
+  }
+
   QueryBuilder<Article, Article, QAfterSortBy> thenByTitle() {
     return addSortByInternal('title', Sort.asc);
   }
@@ -632,6 +708,10 @@ extension ArticleQueryWhereDistinct
     return addDistinctByInternal('id');
   }
 
+  QueryBuilder<Article, Article, QDistinct> distinctByPostedOn() {
+    return addDistinctByInternal('postedOn');
+  }
+
   QueryBuilder<Article, Article, QDistinct> distinctByTitle(
       {bool caseSensitive = true}) {
     return addDistinctByInternal('title', caseSensitive: caseSensitive);
@@ -654,6 +734,10 @@ extension ArticleQueryProperty
 
   QueryBuilder<Article, int?, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<Article, DateTime, QQueryOperations> postedOnProperty() {
+    return addPropertyNameInternal('postedOn');
   }
 
   QueryBuilder<Article, String, QQueryOperations> titleProperty() {
