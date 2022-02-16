@@ -13,6 +13,7 @@ void main() {
       var article = Article()
         ..title = ''
         ..body = ''
+        ..postedOn = DateTime.now()
         ..createdAt = DateTime.now()
         ..updatedAt = DateTime.now();
 
@@ -46,6 +47,7 @@ void main() {
     var article = Article()
       ..title = '記事のタイトル'
       ..body = '記事の本文'
+      ..postedOn = DateTime.now()
       ..createdAt = DateTime.now()
       ..updatedAt = DateTime.now();
 
