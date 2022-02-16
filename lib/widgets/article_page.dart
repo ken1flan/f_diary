@@ -1,5 +1,8 @@
-import 'package:f_diary/isar_helper.dart';
 import 'package:flutter/material.dart';
+
+import 'package:intl/intl.dart';
+
+import 'package:f_diary/isar_helper.dart';
 import 'package:f_diary/models/article.dart';
 
 class ArticlePage extends StatefulWidget {
@@ -15,7 +18,7 @@ class _ArticleState extends State<ArticlePage> {
   _ArticleState();
 
   @override
-  Widget build(BuildContext contest) {
+  Widget build(BuildContext context) {
     var article = widget.article;
     var dateTime = article.createdAt;
     var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
@@ -25,6 +28,19 @@ class _ArticleState extends State<ArticlePage> {
             padding: const EdgeInsets.all(16),
             child: ListView(
               children: [
+                InkWell(
+                  child: Text(
+                      '投稿日 ' + DateFormat.yMd('ja').format(article.postedOn)),
+                  onTap: () async {
+                    DateTime? picked = await _selectDate(context);
+                    if (picked != null) {
+                      setState(() {
+                        article.postedOn = picked;
+                        _saveArticle(article);
+                      });
+                    }
+                  },
+                ),
                 TextFormField(
                   initialValue: article.title,
                   key: const ValueKey('articleTitleTextField'),
@@ -44,7 +60,7 @@ class _ArticleState extends State<ArticlePage> {
                     article.body = value;
                     _saveArticle(article);
                   },
-                )
+                ),
               ],
             )));
   }
@@ -54,5 +70,17 @@ class _ArticleState extends State<ArticlePage> {
     isar.writeTxnSync((isar) {
       article.id = isar.articles.putSync(article);
     });
+  }
+
+  Future<DateTime?> _selectDate(BuildContext context) async {
+    DateTime initialDate = DateTime.now();
+    DateTime firstDate = DateTime.now().add(const Duration(days: -360));
+    DateTime lastDate = DateTime.now().add(const Duration(days: 360));
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: initialDate,
+        firstDate: firstDate,
+        lastDate: lastDate);
+    return picked;
   }
 }

@@ -47,6 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
           var article = Article()
             ..title = ''
             ..body = ''
+            ..postedOn = DateTime.now()
             ..createdAt = DateTime.now()
             ..updatedAt = DateTime.now();
           _openArticle(article, context);
