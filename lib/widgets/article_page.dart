@@ -60,6 +60,23 @@ class _ArticleState extends State<ArticlePage> {
                     article.save();
                   },
                 ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 32, bottom: 0),
+                  child: SizedBox(width: 300, child: Text('画像が選択されていません。')),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(shape: StadiumBorder()),
+                        child: const Icon(Icons.add_a_photo)),
+                    OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(shape: StadiumBorder()),
+                        child: const Icon(Icons.photo_library)),
+                  ],
+                )
               ],
             )));
   }
