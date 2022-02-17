@@ -70,11 +70,13 @@ class _ArticleState extends State<ArticlePage> {
                   children: [
                     OutlinedButton(
                         onPressed: () {},
-                        style: OutlinedButton.styleFrom(shape: StadiumBorder()),
+                        style: OutlinedButton.styleFrom(
+                            shape: const StadiumBorder()),
                         child: const Icon(Icons.add_a_photo)),
                     OutlinedButton(
                         onPressed: () {},
-                        style: OutlinedButton.styleFrom(shape: StadiumBorder()),
+                        style: OutlinedButton.styleFrom(
+                            shape: const StadiumBorder()),
                         child: const Icon(Icons.photo_library)),
                   ],
                 )
