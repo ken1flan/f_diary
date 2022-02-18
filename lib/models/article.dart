@@ -10,6 +10,7 @@ class Article {
 
   late String title;
   late String body;
+  late String imageFileName;
   late DateTime postedOn;
   late DateTime createdAt;
   late DateTime updatedAt;
