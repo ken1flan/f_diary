@@ -4,7 +4,7 @@ import 'package:f_diary/models/article.dart';
 
 late Isar isar;
 
-class IsarHelper {
+class Common {
   static var schemas = [ArticleSchema];
 
   static Future<void> initialize() async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:f_diary/isar_helper.dart';
+import 'package:f_diary/common.dart';
 import 'package:f_diary/models/article.dart';
 
 import 'package:f_diary/widgets/my_home_page.dart';

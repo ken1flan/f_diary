@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
 
-import 'package:f_diary/isar_helper.dart';
+import 'package:f_diary/common.dart';
 import 'package:f_diary/models/article.dart';
 
 class ArticlePage extends StatefulWidget {
