@@ -1,16 +1,19 @@
+import 'dart:io';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:f_diary/models/article.dart';
 
+late Directory applicationDocumentsDirectory;
 late Isar isar;
 
-class IsarHelper {
+class Common {
   static var schemas = [ArticleSchema];
 
   static Future<void> initialize() async {
+    applicationDocumentsDirectory = await getApplicationDocumentsDirectory();
     isar = await Isar.open(
       schemas: schemas,
-      directory: (await getApplicationDocumentsDirectory()).path,
+      directory: applicationDocumentsDirectory.path,
     );
   }
 

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'package:f_diary/isar_helper.dart';
+import 'package:f_diary/common.dart';
 import 'package:f_diary/widgets/my_home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ja_JP');
-  await IsarHelper.initialize();
+  await Common.initialize();
   // IsarHelper.addSampleArticle(); // あとで削除
 
   runApp(const MyApp());
