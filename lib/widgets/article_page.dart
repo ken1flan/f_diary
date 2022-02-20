@@ -36,7 +36,7 @@ class _ArticleState extends State<ArticlePage> {
                     if (picked != null) {
                       setState(() {
                         article.postedOn = picked;
-                        _saveArticle(article);
+                        article.save();
                       });
                     }
                   },
@@ -48,7 +48,7 @@ class _ArticleState extends State<ArticlePage> {
                       labelText: 'タイトル', hintText: '今日をひとことでいうとなんですか？'),
                   onChanged: (value) {
                     article.title = value;
-                    _saveArticle(article);
+                    article.save();
                   },
                 ),
                 TextFormField(
@@ -58,18 +58,11 @@ class _ArticleState extends State<ArticlePage> {
                   maxLines: 10,
                   onChanged: (value) {
                     article.body = value;
-                    _saveArticle(article);
+                    article.save();
                   },
                 ),
               ],
             )));
-  }
-
-  void _saveArticle(Article article) {
-    article.updatedAt = DateTime.now();
-    isar.writeTxnSync((isar) {
-      article.id = isar.articles.putSync(article);
-    });
   }
 
   Future<DateTime?> _selectDate(Article article, BuildContext context) async {
