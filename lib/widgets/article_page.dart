@@ -32,7 +32,7 @@ class _ArticleState extends State<ArticlePage> {
                   child: Text(
                       '投稿日 ' + DateFormat.yMd('ja').format(article.postedOn)),
                   onTap: () async {
-                    DateTime? picked = await _selectDate(context);
+                    DateTime? picked = await _selectDate(article, context);
                     if (picked != null) {
                       setState(() {
                         article.postedOn = picked;
@@ -72,8 +72,8 @@ class _ArticleState extends State<ArticlePage> {
     });
   }
 
-  Future<DateTime?> _selectDate(BuildContext context) async {
-    DateTime initialDate = DateTime.now();
+  Future<DateTime?> _selectDate(Article article, BuildContext context) async {
+    DateTime initialDate = article.postedOn;
     DateTime firstDate = DateTime.now().add(const Duration(days: -360));
     DateTime lastDate = DateTime.now().add(const Duration(days: 360));
     final DateTime? picked = await showDatePicker(
