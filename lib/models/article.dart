@@ -1,6 +1,7 @@
 import 'package:f_diary/common.dart';
 import 'package:isar/isar.dart';
 import 'dart:io';
+import 'package:f_diary/file_converter.dart';
 
 part 'article.g.dart';
 
@@ -11,7 +12,8 @@ class Article {
 
   late String title;
   late String body;
-  late String imageFileName;
+  @FileConverter()
+  late File? imageFile;
   late DateTime postedOn;
   late DateTime createdAt;
   late DateTime updatedAt;

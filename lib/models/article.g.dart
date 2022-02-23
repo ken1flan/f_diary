@@ -17,13 +17,13 @@ extension GetArticleCollection on Isar {
 final ArticleSchema = CollectionSchema(
   name: 'Article',
   schema:
-      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imageFileName","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
+      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imagePath","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
   adapter: const _ArticleAdapter(),
   idName: 'id',
   propertyIds: {
     'body': 0,
     'createdAt': 1,
-    'imageFileName': 2,
+    'imagePath': 2,
     'postedOn': 3,
     'title': 4,
     'updatedAt': 5
@@ -51,9 +51,9 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
     dynamicSize += _body.length;
     final value1 = object.createdAt;
     final _createdAt = value1;
-    final value2 = object.imageFileName;
-    final _imageFileName = BinaryWriter.utf8Encoder.convert(value2);
-    dynamicSize += _imageFileName.length;
+    final value2 = object.imagePath;
+    final _imagePath = BinaryWriter.utf8Encoder.convert(value2);
+    dynamicSize += _imagePath.length;
     final value3 = object.postedOn;
     final _postedOn = value3;
     final value4 = object.title;
@@ -69,7 +69,7 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
     final writer = BinaryWriter(buffer, 50);
     writer.writeBytes(offsets[0], _body);
     writer.writeDateTime(offsets[1], _createdAt);
-    writer.writeBytes(offsets[2], _imageFileName);
+    writer.writeBytes(offsets[2], _imagePath);
     writer.writeDateTime(offsets[3], _postedOn);
     writer.writeBytes(offsets[4], _title);
     writer.writeDateTime(offsets[5], _updatedAt);
@@ -82,7 +82,6 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
     object.body = reader.readString(offsets[0]);
     object.createdAt = reader.readDateTime(offsets[1]);
     object.id = id;
-    object.imageFileName = reader.readString(offsets[2]);
     object.postedOn = reader.readDateTime(offsets[3]);
     object.title = reader.readString(offsets[4]);
     object.updatedAt = reader.readDateTime(offsets[5]);
@@ -400,20 +399,19 @@ extension ArticleQueryFilter
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileNameEqualTo(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
-      property: 'imageFileName',
+      property: 'imagePath',
       value: value,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition>
-      imageFileNameGreaterThan(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathGreaterThan(
     String value, {
     bool caseSensitive = true,
     bool include = false,
@@ -421,13 +419,13 @@ extension ArticleQueryFilter
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.gt,
       include: include,
-      property: 'imageFileName',
+      property: 'imagePath',
       value: value,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileNameLessThan(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathLessThan(
     String value, {
     bool caseSensitive = true,
     bool include = false,
@@ -435,13 +433,13 @@ extension ArticleQueryFilter
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.lt,
       include: include,
-      property: 'imageFileName',
+      property: 'imagePath',
       value: value,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileNameBetween(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathBetween(
     String lower,
     String upper, {
     bool caseSensitive = true,
@@ -449,7 +447,7 @@ extension ArticleQueryFilter
     bool includeUpper = true,
   }) {
     return addFilterConditionInternal(FilterCondition.between(
-      property: 'imageFileName',
+      property: 'imagePath',
       lower: lower,
       includeLower: includeLower,
       upper: upper,
@@ -458,47 +456,47 @@ extension ArticleQueryFilter
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileNameStartsWith(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.startsWith,
-      property: 'imageFileName',
+      property: 'imagePath',
       value: value,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileNameEndsWith(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.endsWith,
-      property: 'imageFileName',
+      property: 'imagePath',
       value: value,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileNameContains(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathContains(
       String value,
       {bool caseSensitive = true}) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.contains,
-      property: 'imageFileName',
+      property: 'imagePath',
       value: value,
       caseSensitive: caseSensitive,
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileNameMatches(
+  QueryBuilder<Article, Article, QAfterFilterCondition> imagePathMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.matches,
-      property: 'imageFileName',
+      property: 'imagePath',
       value: pattern,
       caseSensitive: caseSensitive,
     ));
@@ -729,12 +727,12 @@ extension ArticleQueryWhereSortBy on QueryBuilder<Article, Article, QSortBy> {
     return addSortByInternal('id', Sort.desc);
   }
 
-  QueryBuilder<Article, Article, QAfterSortBy> sortByImageFileName() {
-    return addSortByInternal('imageFileName', Sort.asc);
+  QueryBuilder<Article, Article, QAfterSortBy> sortByImagePath() {
+    return addSortByInternal('imagePath', Sort.asc);
   }
 
-  QueryBuilder<Article, Article, QAfterSortBy> sortByImageFileNameDesc() {
-    return addSortByInternal('imageFileName', Sort.desc);
+  QueryBuilder<Article, Article, QAfterSortBy> sortByImagePathDesc() {
+    return addSortByInternal('imagePath', Sort.desc);
   }
 
   QueryBuilder<Article, Article, QAfterSortBy> sortByPostedOn() {
@@ -788,12 +786,12 @@ extension ArticleQueryWhereSortThenBy
     return addSortByInternal('id', Sort.desc);
   }
 
-  QueryBuilder<Article, Article, QAfterSortBy> thenByImageFileName() {
-    return addSortByInternal('imageFileName', Sort.asc);
+  QueryBuilder<Article, Article, QAfterSortBy> thenByImagePath() {
+    return addSortByInternal('imagePath', Sort.asc);
   }
 
-  QueryBuilder<Article, Article, QAfterSortBy> thenByImageFileNameDesc() {
-    return addSortByInternal('imageFileName', Sort.desc);
+  QueryBuilder<Article, Article, QAfterSortBy> thenByImagePathDesc() {
+    return addSortByInternal('imagePath', Sort.desc);
   }
 
   QueryBuilder<Article, Article, QAfterSortBy> thenByPostedOn() {
@@ -836,9 +834,9 @@ extension ArticleQueryWhereDistinct
     return addDistinctByInternal('id');
   }
 
-  QueryBuilder<Article, Article, QDistinct> distinctByImageFileName(
+  QueryBuilder<Article, Article, QDistinct> distinctByImagePath(
       {bool caseSensitive = true}) {
-    return addDistinctByInternal('imageFileName', caseSensitive: caseSensitive);
+    return addDistinctByInternal('imagePath', caseSensitive: caseSensitive);
   }
 
   QueryBuilder<Article, Article, QDistinct> distinctByPostedOn() {
@@ -869,8 +867,8 @@ extension ArticleQueryProperty
     return addPropertyNameInternal('id');
   }
 
-  QueryBuilder<Article, String, QQueryOperations> imageFileNameProperty() {
-    return addPropertyNameInternal('imageFileName');
+  QueryBuilder<Article, String, QQueryOperations> imagePathProperty() {
+    return addPropertyNameInternal('imagePath');
   }
 
   QueryBuilder<Article, DateTime, QQueryOperations> postedOnProperty() {
