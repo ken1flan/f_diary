@@ -24,29 +24,4 @@ class Article {
       id = isar.articles.putSync(this);
     });
   }
-
-  void storeImage(File file) {
-    if (!imageDir.existsSync()) {
-      imageDir.createSync();
-    }
-    String fileName = file.path.split('/').last;
-    imageFileName = imageDir.path + '/' + fileName;
-    imageFile.copySync(imageFileName);
-  }
-
-  Directory get imageDir {
-    return Directory(applicationDocumentsDirectory.path +
-        '/images/articles/' +
-        id.toString());
-  }
-
-  String get imagePath {
-    // TODO
-    return 'imagePath';
-  }
-
-  File get imageFile {
-    // TODO
-    return File(imagePath);
-  }
 }

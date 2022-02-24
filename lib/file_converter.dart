@@ -18,8 +18,9 @@ class FileConverter extends TypeConverter<File, String> {
     var digest = crypto.md5.convert(file.readAsBytesSync());
     var orgFileName = file.path.split('/').last;
     var nameArray = orgFileName.split('.');
-    var newFileName =
-        nameArray.length < 2 ? digest : digest + nameArray.sublist(1).join('.');
+    var newFileName = nameArray.length < 2
+        ? digest.toString()
+        : digest.toString() + nameArray.sublist(1).join('.');
     var newFilePath = baseDir.path + '/' + newFileName;
     var existFile = File(newFilePath);
     if (existFile.existsSync()) {

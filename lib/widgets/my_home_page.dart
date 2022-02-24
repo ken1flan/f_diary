@@ -47,7 +47,6 @@ class _MyHomePageState extends State<MyHomePage> {
           var article = Article()
             ..title = ''
             ..body = ''
-            ..imageFileName = ''
             ..postedOn = DateTime.now()
             ..createdAt = DateTime.now()
             ..updatedAt = DateTime.now();
