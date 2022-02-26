@@ -22,6 +22,7 @@ void main() {
       final article = Article()
         ..title = '記事のタイトル'
         ..body = '記事の本文'
+        ..imageFile = null
         ..postedOn = DateTime.now()
         ..createdAt = DateTime.now()
         ..updatedAt = DateTime.now();

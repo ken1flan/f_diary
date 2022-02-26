@@ -9,7 +9,7 @@ class FileConverter extends TypeConverter<File?, String?> {
   @override
   // ignore: avoid_renaming_method_parameters
   File? fromIsar(String? filePath) {
-    if (filePath == null) {
+    if (filePath == null || filePath == '') {
       return null;
     } else {
       return File(filePath);
@@ -20,7 +20,7 @@ class FileConverter extends TypeConverter<File?, String?> {
   // ignore: avoid_renaming_method_parameters
   String? toIsar(File? file) {
     if (file == null) {
-      return null;
+      return '';
     }
 
     var digest = crypto.md5.convert(file.readAsBytesSync());
