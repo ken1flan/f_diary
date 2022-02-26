@@ -17,15 +17,16 @@ extension GetArticleCollection on Isar {
 final ArticleSchema = CollectionSchema(
   name: 'Article',
   schema:
-      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
+      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imageFile","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
   adapter: const _ArticleAdapter(),
   idName: 'id',
   propertyIds: {
     'body': 0,
     'createdAt': 1,
-    'postedOn': 2,
-    'title': 3,
-    'updatedAt': 4
+    'imageFile': 2,
+    'postedOn': 3,
+    'title': 4,
+    'updatedAt': 5
   },
   indexIds: {},
   indexTypes: {},
@@ -41,6 +42,8 @@ final ArticleSchema = CollectionSchema(
 class _ArticleAdapter extends IsarTypeAdapter<Article> {
   const _ArticleAdapter();
 
+  static const _fileConverter = FileConverter();
+
   @override
   void serialize(IsarCollection<Article> collection, IsarRawObject rawObj,
       Article object, List<int> offsets, AdapterAlloc alloc) {
@@ -50,24 +53,31 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
     dynamicSize += _body.length;
     final value1 = object.createdAt;
     final _createdAt = value1;
-    final value2 = object.postedOn;
-    final _postedOn = value2;
-    final value3 = object.title;
-    final _title = BinaryWriter.utf8Encoder.convert(value3);
+    final value2 = _ArticleAdapter._fileConverter.toIsar(object.imageFile);
+    IsarUint8List? _imageFile;
+    if (value2 != null) {
+      _imageFile = BinaryWriter.utf8Encoder.convert(value2);
+    }
+    dynamicSize += _imageFile?.length ?? 0;
+    final value3 = object.postedOn;
+    final _postedOn = value3;
+    final value4 = object.title;
+    final _title = BinaryWriter.utf8Encoder.convert(value4);
     dynamicSize += _title.length;
-    final value4 = object.updatedAt;
-    final _updatedAt = value4;
-    final size = dynamicSize + 42;
+    final value5 = object.updatedAt;
+    final _updatedAt = value5;
+    final size = dynamicSize + 50;
 
     rawObj.buffer = alloc(size);
     rawObj.buffer_length = size;
     final buffer = bufAsBytes(rawObj.buffer, size);
-    final writer = BinaryWriter(buffer, 42);
+    final writer = BinaryWriter(buffer, 50);
     writer.writeBytes(offsets[0], _body);
     writer.writeDateTime(offsets[1], _createdAt);
-    writer.writeDateTime(offsets[2], _postedOn);
-    writer.writeBytes(offsets[3], _title);
-    writer.writeDateTime(offsets[4], _updatedAt);
+    writer.writeBytes(offsets[2], _imageFile);
+    writer.writeDateTime(offsets[3], _postedOn);
+    writer.writeBytes(offsets[4], _title);
+    writer.writeDateTime(offsets[5], _updatedAt);
   }
 
   @override
@@ -77,9 +87,11 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
     object.body = reader.readString(offsets[0]);
     object.createdAt = reader.readDateTime(offsets[1]);
     object.id = id;
-    object.postedOn = reader.readDateTime(offsets[2]);
-    object.title = reader.readString(offsets[3]);
-    object.updatedAt = reader.readDateTime(offsets[4]);
+    object.imageFile = _ArticleAdapter._fileConverter
+        .fromIsar(reader.readStringOrNull(offsets[2]));
+    object.postedOn = reader.readDateTime(offsets[3]);
+    object.title = reader.readString(offsets[4]);
+    object.updatedAt = reader.readDateTime(offsets[5]);
     return object;
   }
 
@@ -94,10 +106,13 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
       case 1:
         return (reader.readDateTime(offset)) as P;
       case 2:
-        return (reader.readDateTime(offset)) as P;
+        return (_ArticleAdapter._fileConverter
+            .fromIsar(reader.readStringOrNull(offset))) as P;
       case 3:
-        return (reader.readString(offset)) as P;
+        return (reader.readDateTime(offset)) as P;
       case 4:
+        return (reader.readString(offset)) as P;
+      case 5:
         return (reader.readDateTime(offset)) as P;
       default:
         throw 'Illegal propertyIndex';
@@ -392,6 +407,117 @@ extension ArticleQueryFilter
     ));
   }
 
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileIsNull() {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.isNull,
+      property: 'imageFile',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileEqualTo(
+    File? value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'imageFile',
+      value: _ArticleAdapter._fileConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileGreaterThan(
+    File? value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'imageFile',
+      value: _ArticleAdapter._fileConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileLessThan(
+    File? value, {
+    bool caseSensitive = true,
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'imageFile',
+      value: _ArticleAdapter._fileConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileBetween(
+    File? lower,
+    File? upper, {
+    bool caseSensitive = true,
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'imageFile',
+      lower: _ArticleAdapter._fileConverter.toIsar(lower),
+      includeLower: includeLower,
+      upper: _ArticleAdapter._fileConverter.toIsar(upper),
+      includeUpper: includeUpper,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileStartsWith(
+    File value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.startsWith,
+      property: 'imageFile',
+      value: _ArticleAdapter._fileConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileEndsWith(
+    File value, {
+    bool caseSensitive = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.endsWith,
+      property: 'imageFile',
+      value: _ArticleAdapter._fileConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileContains(
+      File value,
+      {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.contains,
+      property: 'imageFile',
+      value: _ArticleAdapter._fileConverter.toIsar(value),
+      caseSensitive: caseSensitive,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterFilterCondition> imageFileMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.matches,
+      property: 'imageFile',
+      value: pattern,
+      caseSensitive: caseSensitive,
+    ));
+  }
+
   QueryBuilder<Article, Article, QAfterFilterCondition> postedOnEqualTo(
       DateTime value) {
     return addFilterConditionInternal(FilterCondition(
@@ -617,6 +743,14 @@ extension ArticleQueryWhereSortBy on QueryBuilder<Article, Article, QSortBy> {
     return addSortByInternal('id', Sort.desc);
   }
 
+  QueryBuilder<Article, Article, QAfterSortBy> sortByImageFile() {
+    return addSortByInternal('imageFile', Sort.asc);
+  }
+
+  QueryBuilder<Article, Article, QAfterSortBy> sortByImageFileDesc() {
+    return addSortByInternal('imageFile', Sort.desc);
+  }
+
   QueryBuilder<Article, Article, QAfterSortBy> sortByPostedOn() {
     return addSortByInternal('postedOn', Sort.asc);
   }
@@ -668,6 +802,14 @@ extension ArticleQueryWhereSortThenBy
     return addSortByInternal('id', Sort.desc);
   }
 
+  QueryBuilder<Article, Article, QAfterSortBy> thenByImageFile() {
+    return addSortByInternal('imageFile', Sort.asc);
+  }
+
+  QueryBuilder<Article, Article, QAfterSortBy> thenByImageFileDesc() {
+    return addSortByInternal('imageFile', Sort.desc);
+  }
+
   QueryBuilder<Article, Article, QAfterSortBy> thenByPostedOn() {
     return addSortByInternal('postedOn', Sort.asc);
   }
@@ -708,6 +850,11 @@ extension ArticleQueryWhereDistinct
     return addDistinctByInternal('id');
   }
 
+  QueryBuilder<Article, Article, QDistinct> distinctByImageFile(
+      {bool caseSensitive = true}) {
+    return addDistinctByInternal('imageFile', caseSensitive: caseSensitive);
+  }
+
   QueryBuilder<Article, Article, QDistinct> distinctByPostedOn() {
     return addDistinctByInternal('postedOn');
   }
@@ -734,6 +881,10 @@ extension ArticleQueryProperty
 
   QueryBuilder<Article, int?, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<Article, File?, QQueryOperations> imageFileProperty() {
+    return addPropertyNameInternal('imageFile');
   }
 
   QueryBuilder<Article, DateTime, QQueryOperations> postedOnProperty() {

@@ -3,18 +3,26 @@ import 'package:crypto/crypto.dart' as crypto;
 import 'package:isar/isar.dart';
 import 'package:f_diary/common.dart';
 
-class FileConverter extends TypeConverter<File, String> {
+class FileConverter extends TypeConverter<File?, String?> {
   const FileConverter();
 
   @override
   // ignore: avoid_renaming_method_parameters
-  File fromIsar(String filePath) {
-    return File(filePath);
+  File? fromIsar(String? filePath) {
+    if (filePath == null) {
+      return null;
+    } else {
+      return File(filePath);
+    }
   }
 
   @override
   // ignore: avoid_renaming_method_parameters
-  String toIsar(File file) {
+  String? toIsar(File? file) {
+    if (file == null) {
+      return null;
+    }
+
     var digest = crypto.md5.convert(file.readAsBytesSync());
     var orgFileName = file.path.split('/').last;
     var nameArray = orgFileName.split('.');

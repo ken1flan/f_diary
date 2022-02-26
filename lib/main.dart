@@ -9,7 +9,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ja_JP');
   await Common.initialize();
-  // IsarHelper.addSampleArticle(); // あとで削除
 
   runApp(const MyApp());
 }

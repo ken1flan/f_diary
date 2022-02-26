@@ -25,6 +25,7 @@ class _ArticleState extends State<ArticlePage> {
     var article = widget.article;
     var dateTime = article.createdAt;
     var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+    imageFile = article.imageFile;
 
     return Scaffold(
         appBar: AppBar(title: Text(titleString)),
@@ -79,14 +80,14 @@ class _ArticleState extends State<ArticlePage> {
                   children: [
                     OutlinedButton(
                         onPressed: () {
-                          _setImageFromCamera();
+                          _setImageFromCamera(article);
                         },
                         style: OutlinedButton.styleFrom(
                             shape: const StadiumBorder()),
                         child: const Icon(Icons.add_a_photo)),
                     OutlinedButton(
                         onPressed: () {
-                          _setImageFromGallery();
+                          _setImageFromGallery(article);
                         },
                         style: OutlinedButton.styleFrom(
                             shape: const StadiumBorder()),
@@ -109,7 +110,7 @@ class _ArticleState extends State<ArticlePage> {
     return picked;
   }
 
-  void _setImageFromCamera() async {
+  void _setImageFromCamera(Article article) async {
     final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
@@ -117,10 +118,12 @@ class _ArticleState extends State<ArticlePage> {
       } else {
         imageFile = null;
       }
+      article.imageFile = imageFile;
+      article.save();
     });
   }
 
-  void _setImageFromGallery() async {
+  void _setImageFromGallery(Article article) async {
     final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
       if (pickedFile != null) {
@@ -128,6 +131,8 @@ class _ArticleState extends State<ArticlePage> {
       } else {
         imageFile = null;
       }
+      article.imageFile = imageFile;
+      article.save();
     });
   }
 }
