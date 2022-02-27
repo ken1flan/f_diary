@@ -41,5 +41,33 @@ void main() {
         });
       });
     });
+
+    group('#toIsar', () {
+      var fileConverter = const FileConverter();
+      late File? file;
+
+      group('file = nullのとき', () {
+        setUp(() {
+          file = null;
+        });
+
+        test('空文字列を返すこと', () {
+          expect(fileConverter.toIsar(file), equals(''));
+        });
+      });
+
+      group('file = test/fixtures/images/480x320.pngのとき', () {
+        setUp(() {
+          file = File('test/fixtures/images/480x320.png');
+        });
+        test('アプリケーションディレクトリに保存されたパスを返すこと', () {
+          var filePath = fileConverter.toIsar(file);
+          // 1acc05735f503e8471e440efcad1706d は480x320.pngのMD5値
+          expect(
+              filePath, endsWith('files/1acc05735f503e8471e440efcad1706d.png'));
+          expect(File(filePath!).existsSync(), isTrue);
+        });
+      });
+    });
   });
 }

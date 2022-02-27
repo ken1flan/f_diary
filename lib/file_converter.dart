@@ -28,7 +28,7 @@ class FileConverter extends TypeConverter<File?, String?> {
     var nameArray = orgFileName.split('.');
     var newFileName = nameArray.length < 2
         ? digest.toString()
-        : digest.toString() + nameArray.sublist(1).join('.');
+        : digest.toString() + '.' + nameArray.sublist(1).join('.');
     var newFilePath = baseDir.path + '/' + newFileName;
     var existFile = File(newFilePath);
     if (existFile.existsSync()) {
