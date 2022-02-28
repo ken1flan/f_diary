@@ -15,6 +15,7 @@ void main() {
           var article = Article()
             ..title = 'タイトルのテスト'
             ..body = '本文のテスト'
+            ..imageFile = null
             ..postedOn = day
             ..createdAt = DateTime.now()
             ..updatedAt = DateTime.now();
@@ -37,6 +38,7 @@ void main() {
           var article = Article()
             ..title = 'タイトルのテスト'
             ..body = '本文のテスト'
+            ..imageFile = null
             ..postedOn = day
             ..createdAt = DateTime.now()
             ..updatedAt = DateTime.now();

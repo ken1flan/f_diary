@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'dart:io';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:f_diary/models/article.dart';
 
@@ -14,6 +16,8 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticleState extends State<ArticlePage> {
+  final ImagePicker imagePicker = ImagePicker();
+  File? imageFile;
   _ArticleState();
 
   @override
@@ -21,6 +25,8 @@ class _ArticleState extends State<ArticlePage> {
     var article = widget.article;
     var dateTime = article.createdAt;
     var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
+    imageFile = article.imageFile;
+
     return Scaffold(
         appBar: AppBar(title: Text(titleString)),
         body: Padding(
@@ -60,6 +66,34 @@ class _ArticleState extends State<ArticlePage> {
                     article.save();
                   },
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 32, bottom: 0),
+                  child: SizedBox(
+                    width: 300,
+                    child: imageFile == null
+                        ? const Text('画像が選択されていません。')
+                        : Image.file(imageFile!),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    OutlinedButton(
+                        onPressed: () {
+                          _setImageFromCamera(article);
+                        },
+                        style: OutlinedButton.styleFrom(
+                            shape: const StadiumBorder()),
+                        child: const Icon(Icons.add_a_photo)),
+                    OutlinedButton(
+                        onPressed: () {
+                          _setImageFromGallery(article);
+                        },
+                        style: OutlinedButton.styleFrom(
+                            shape: const StadiumBorder()),
+                        child: const Icon(Icons.photo_library)),
+                  ],
+                )
               ],
             )));
   }
@@ -74,5 +108,31 @@ class _ArticleState extends State<ArticlePage> {
         firstDate: firstDate,
         lastDate: lastDate);
     return picked;
+  }
+
+  void _setImageFromCamera(Article article) async {
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        imageFile = File(pickedFile.path);
+      } else {
+        imageFile = null;
+      }
+      article.imageFile = imageFile;
+      article.save();
+    });
+  }
+
+  void _setImageFromGallery(Article article) async {
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      if (pickedFile != null) {
+        imageFile = File(pickedFile.path);
+      } else {
+        imageFile = null;
+      }
+      article.imageFile = imageFile;
+      article.save();
+    });
   }
 }
