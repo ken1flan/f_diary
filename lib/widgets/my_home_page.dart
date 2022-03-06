@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:f_diary/common.dart';
 import 'package:f_diary/models/article.dart';
@@ -21,19 +22,45 @@ class _MyHomePageState extends State<MyHomePage> {
     if (articles.isEmpty) {
       body = const Center(child: Text('まだありません。'));
     } else {
-      var list = articles
-          .map((Article article) => Card(
-                child: InkWell(
-                  onTap: () {
-                    _openArticle(article, context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(article.title),
-                  ),
-                ),
-              ))
-          .toList();
+      var list = articles.map((Article article) {
+        return Card(
+          child: InkWell(
+            onTap: () {
+              _openArticle(article, context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(children: [
+                article.imageFile == null
+                    ? const Image(
+                        image: AssetImage('assets/images/1px.png'),
+                        width: 64,
+                        height: 64,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.file(
+                        article.imageFile!,
+                        width: 64,
+                        height: 64,
+                      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      DateFormat.yMd('ja').format(article.postedOn),
+                      style: const TextStyle(color: Colors.grey, fontSize: 15),
+                    ),
+                    Text(
+                      article.title,
+                      style: const TextStyle(fontSize: 20),
+                    ),
+                  ],
+                )
+              ]),
+            ),
+          ),
+        );
+      }).toList();
       body = ListView(children: list);
     }
 
