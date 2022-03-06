@@ -29,9 +29,19 @@ void main() {
           expect(fileConverter.fromIsar(filePath), equals(null));
         });
       });
-      group('filePath = foo/bar.png のとき', () {
+      group('filePath = not_exist/bar.png(存在しないファイル) のとき', () {
         setUp(() {
-          filePath = 'foo/bar.png';
+          filePath = 'not_exist/bar.png';
+        });
+
+        test('nullを返すこと', () {
+          expect(fileConverter.fromIsar(filePath), equals(null));
+        });
+      });
+
+      group('filePath = test/fixtures/images/480x320.png(存在するファイル) のとき', () {
+        setUp(() {
+          filePath = File('test/fixtures/images/480x320.png').path;
         });
 
         test('Fileを返すこと', () {
@@ -59,6 +69,22 @@ void main() {
       group('file = test/fixtures/images/480x320.pngのとき', () {
         setUp(() {
           file = File('test/fixtures/images/480x320.png');
+        });
+        test('アプリケーションディレクトリに保存されたパスを返すこと', () {
+          var filePath = fileConverter.toIsar(file);
+          // 1acc05735f503e8471e440efcad1706d は480x320.pngのMD5値
+          expect(
+              filePath, endsWith('files/1acc05735f503e8471e440efcad1706d.png'));
+          expect(File(filePath!).existsSync(), isTrue);
+        });
+      });
+
+      group(
+          'file = test/fixtures/images/480x320.png(アプリケーションの保存ディレクトリにすでにあるファイル)のとき',
+          () {
+        setUp(() {
+          var orgFile = File('test/fixtures/images/480x320.png');
+          file = File(fileConverter.toIsar(orgFile)!);
         });
         test('アプリケーションディレクトリに保存されたパスを返すこと', () {
           var filePath = fileConverter.toIsar(file);

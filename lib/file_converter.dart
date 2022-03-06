@@ -11,8 +11,13 @@ class FileConverter extends TypeConverter<File?, String?> {
   File? fromIsar(String? filePath) {
     if (filePath == null || filePath == '') {
       return null;
+    }
+
+    var file = File(filePath);
+    if (file.existsSync()) {
+      return file;
     } else {
-      return File(filePath);
+      return null;
     }
   }
 
@@ -21,6 +26,10 @@ class FileConverter extends TypeConverter<File?, String?> {
   String? toIsar(File? file) {
     if (file == null) {
       return '';
+    }
+
+    if (file.parent.path == baseDir.path) {
+      return file.path;
     }
 
     var digest = crypto.md5.convert(file.readAsBytesSync());
