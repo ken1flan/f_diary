@@ -24,4 +24,14 @@ class Article {
       id = isar.articles.putSync(this);
     });
   }
+
+  void destroy() {
+    if (id == null) {
+      return;
+    } else {
+      isar.writeTxnSync((isar) {
+        isar.articles.deleteSync(id!);
+      });
+    }
+  }
 }

@@ -58,5 +58,44 @@ void main() {
         });
       });
     });
+
+    group('#destroy', () {
+      late Article article;
+
+      group('Articleが保存されていないとき', () {
+        setUp(() {
+          article = Article()
+            ..title = 'タイトルのテスト'
+            ..body = '本文のテスト'
+            ..imageFile = null
+            ..postedOn = DateTime.now()
+            ..createdAt = DateTime.now()
+            ..updatedAt = DateTime.now();
+        });
+        test('正常終了すること', () {
+          expect(() => article.destroy(), returnsNormally);
+        });
+      });
+
+      group('Articleが保存されているとき', () {
+        setUp(() {
+          article = Article()
+            ..title = 'タイトルのテスト'
+            ..body = '本文のテスト'
+            ..imageFile = null
+            ..postedOn = DateTime.now()
+            ..createdAt = DateTime.now()
+            ..updatedAt = DateTime.now();
+          article.save();
+        });
+        test('レコードが消えていること', () {
+          var id = article.id;
+          article.destroy();
+
+          var savedArticle = isar.articles.getSync(id!);
+          expect(savedArticle, isNull);
+        });
+      });
+    });
   });
 }
