@@ -28,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onTap: () {
               _openArticle(article, context);
             },
+            onLongPress: () => _deleteArticle(article, context),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(children: [
@@ -93,5 +94,31 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => ArticlePage(article),
         ));
     setState(() {});
+  }
+
+  void _deleteArticle(Article article, BuildContext contex) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            content: Text('「' + article.title + '」を削除しますか？'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('いいえ'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  setState(() {
+                    article.destroy();
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: const Text('はい'),
+              )
+            ],
+          );
+        });
   }
 }
