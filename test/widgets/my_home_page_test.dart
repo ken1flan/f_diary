@@ -47,6 +47,17 @@ void main() {
         expect(find.text(article.title), findsOneWidget);
         expect(find.text(article.body), findsOneWidget);
       });
+
+      testWidgets('タイトルを長押したときに記事を削除できること', (WidgetTester tester) async {
+        await tester.pumpWidget(TestHelper.wrapWithMaterial(myHomePage));
+        await tester.longPress(find.text(article.title));
+        await tester.pump();
+
+        await tester.tap(find.text('はい'));
+        await tester.pump();
+
+        expect(find.text('まだありません。'), findsOneWidget);
+      });
     });
 
     testWidgets('エディットボタンを押したときに記事ページが表示されること', (WidgetTester tester) async {
