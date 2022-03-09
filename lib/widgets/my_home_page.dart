@@ -17,7 +17,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    var articles = isar.articles.where().findAllSync();
+    var articles =
+        isar.articles.where(sort: Sort.desc).anyPostedOn().findAllSync();
     Widget body;
     if (articles.isEmpty) {
       body = const Center(child: Text('まだありません。'));
