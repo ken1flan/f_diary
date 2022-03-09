@@ -14,6 +14,7 @@ class Article {
   late String body;
   @FileConverter()
   late File? imageFile;
+  @Index()
   late DateTime postedOn;
   late DateTime createdAt;
   late DateTime updatedAt;
