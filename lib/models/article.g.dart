@@ -17,7 +17,7 @@ extension GetArticleCollection on Isar {
 final ArticleSchema = CollectionSchema(
   name: 'Article',
   schema:
-      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imageFile","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
+      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imageFile","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[{"name":"postedOn","unique":false,"properties":[{"name":"postedOn","type":"Value","caseSensitive":false}]}],"links":[]}',
   adapter: const _ArticleAdapter(),
   idName: 'id',
   propertyIds: {
@@ -28,8 +28,12 @@ final ArticleSchema = CollectionSchema(
     'title': 4,
     'updatedAt': 5
   },
-  indexIds: {},
-  indexTypes: {},
+  indexIds: {'postedOn': 0},
+  indexTypes: {
+    'postedOn': [
+      NativeIndexType.long,
+    ]
+  },
   linkIds: {},
   backlinkIds: {},
   linkedCollections: [],
@@ -124,6 +128,10 @@ extension ArticleQueryWhereSort on QueryBuilder<Article, Article, QWhere> {
   QueryBuilder<Article, Article, QAfterWhere> anyId() {
     return addWhereClauseInternal(const WhereClause(indexName: null));
   }
+
+  QueryBuilder<Article, Article, QAfterWhere> anyPostedOn() {
+    return addWhereClauseInternal(const WhereClause(indexName: 'postedOn'));
+  }
 }
 
 extension ArticleQueryWhere on QueryBuilder<Article, Article, QWhereClause> {
@@ -194,6 +202,79 @@ extension ArticleQueryWhere on QueryBuilder<Article, Article, QWhereClause> {
       lower: [lowerId],
       includeLower: includeLower,
       upper: [upperId],
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterWhereClause> postedOnEqualTo(
+      DateTime postedOn) {
+    return addWhereClauseInternal(WhereClause(
+      indexName: 'postedOn',
+      lower: [postedOn],
+      includeLower: true,
+      upper: [postedOn],
+      includeUpper: true,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterWhereClause> postedOnNotEqualTo(
+      DateTime postedOn) {
+    if (whereSortInternal == Sort.asc) {
+      return addWhereClauseInternal(WhereClause(
+        indexName: 'postedOn',
+        upper: [postedOn],
+        includeUpper: false,
+      )).addWhereClauseInternal(WhereClause(
+        indexName: 'postedOn',
+        lower: [postedOn],
+        includeLower: false,
+      ));
+    } else {
+      return addWhereClauseInternal(WhereClause(
+        indexName: 'postedOn',
+        lower: [postedOn],
+        includeLower: false,
+      )).addWhereClauseInternal(WhereClause(
+        indexName: 'postedOn',
+        upper: [postedOn],
+        includeUpper: false,
+      ));
+    }
+  }
+
+  QueryBuilder<Article, Article, QAfterWhereClause> postedOnGreaterThan(
+    DateTime postedOn, {
+    bool include = false,
+  }) {
+    return addWhereClauseInternal(WhereClause(
+      indexName: 'postedOn',
+      lower: [postedOn],
+      includeLower: include,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterWhereClause> postedOnLessThan(
+    DateTime postedOn, {
+    bool include = false,
+  }) {
+    return addWhereClauseInternal(WhereClause(
+      indexName: 'postedOn',
+      upper: [postedOn],
+      includeUpper: include,
+    ));
+  }
+
+  QueryBuilder<Article, Article, QAfterWhereClause> postedOnBetween(
+    DateTime lowerPostedOn,
+    DateTime upperPostedOn, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addWhereClauseInternal(WhereClause(
+      indexName: 'postedOn',
+      lower: [lowerPostedOn],
+      includeLower: includeLower,
+      upper: [upperPostedOn],
       includeUpper: includeUpper,
     ));
   }
