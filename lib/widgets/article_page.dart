@@ -23,12 +23,10 @@ class _ArticleState extends State<ArticlePage> {
   @override
   Widget build(BuildContext context) {
     var article = widget.article;
-    var dateTime = article.createdAt;
-    var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
     imageFile = article.imageFile;
 
     return Scaffold(
-        appBar: AppBar(title: Text(titleString)),
+        appBar: AppBar(title: const Text('記事の編集')),
         body: Padding(
             padding: const EdgeInsets.all(16),
             child: ListView(
