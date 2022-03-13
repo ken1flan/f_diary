@@ -66,9 +66,7 @@ void main() {
       await tester.tap(find.byIcon(Icons.edit));
       await tester.pump();
 
-      var dateTime = DateTime.now();
-      var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
-      expect(find.text(titleString, skipOffstage: false), findsOneWidget);
+      expect(find.text('記事の編集', skipOffstage: false), findsOneWidget);
     });
   });
 }

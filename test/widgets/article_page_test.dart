@@ -23,10 +23,7 @@ void main() {
       testWidgets('ページが表示されること', (WidgetTester tester) async {
         await tester.pumpWidget(TestHelper.wrapWithMaterial(articlePage));
 
-        var dateTime = DateTime.now();
-        var titleString = '${dateTime.year}-${dateTime.month}-${dateTime.day}';
-
-        expect(find.text(titleString, skipOffstage: false), findsOneWidget);
+        expect(find.text('記事の編集', skipOffstage: false), findsOneWidget);
         var savedArticle = isar.articles.where().findFirstSync();
         expect(savedArticle, equals(null));
       });
