@@ -45,18 +45,23 @@ class _MyHomePageState extends State<MyHomePage> {
                         width: 64,
                         height: 64,
                       ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      DateFormat.yMd('ja').format(article.postedOn),
-                      style: const TextStyle(color: Colors.grey, fontSize: 15),
-                    ),
-                    Text(
-                      article.title,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        DateFormat.yMd('ja').format(article.postedOn),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 15),
+                      ),
+                      Text(
+                        article.title,
+                        style: const TextStyle(fontSize: 20),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                      ),
+                    ],
+                  ),
                 )
               ]),
             ),
