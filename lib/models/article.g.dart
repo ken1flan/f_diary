@@ -6,7 +6,7 @@ part of 'article.dart';
 // IsarCollectionGenerator
 // **************************************************************************
 
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, invalid_use_of_protected_member
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast
 
 extension GetArticleCollection on Isar {
   IsarCollection<Article> get articles {
@@ -17,8 +17,9 @@ extension GetArticleCollection on Isar {
 final ArticleSchema = CollectionSchema(
   name: 'Article',
   schema:
-      '{"name":"Article","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imageFile","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[{"name":"postedOn","unique":false,"properties":[{"name":"postedOn","type":"Value","caseSensitive":false}]}],"links":[]}',
-  adapter: const _ArticleAdapter(),
+      '{"name":"Article","idName":"id","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imageFile","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[{"name":"postedOn","unique":false,"properties":[{"name":"postedOn","type":"Value","caseSensitive":false}]}],"links":[]}',
+  nativeAdapter: const _ArticleNativeAdapter(),
+  webAdapter: const _ArticleWebAdapter(),
   idName: 'id',
   propertyIds: {
     'body': 0,
@@ -28,6 +29,7 @@ final ArticleSchema = CollectionSchema(
     'title': 4,
     'updatedAt': 5
   },
+  listProperties: {},
   indexIds: {'postedOn': 0},
   indexTypes: {
     'postedOn': [
@@ -37,45 +39,142 @@ final ArticleSchema = CollectionSchema(
   linkIds: {},
   backlinkIds: {},
   linkedCollections: [],
-  getId: (obj) => obj.id,
+  getId: (obj) {
+    if (obj.id == Isar.autoIncrement) {
+      return null;
+    } else {
+      return obj.id;
+    }
+  },
   setId: (obj, id) => obj.id = id,
   getLinks: (obj) => [],
-  version: 1,
+  version: 2,
 );
 
-class _ArticleAdapter extends IsarTypeAdapter<Article> {
-  const _ArticleAdapter();
+const _articleFileConverter = FileConverter();
 
-  static const _fileConverter = FileConverter();
+class _ArticleWebAdapter extends IsarWebTypeAdapter<Article> {
+  const _ArticleWebAdapter();
+
+  @override
+  Object serialize(IsarCollection<Article> collection, Article object) {
+    final jsObj = IsarNative.newJsObject();
+    IsarNative.jsObjectSet(jsObj, 'body', object.body);
+    IsarNative.jsObjectSet(
+        jsObj, 'createdAt', object.createdAt.toUtc().millisecondsSinceEpoch);
+    IsarNative.jsObjectSet(jsObj, 'id', object.id);
+    IsarNative.jsObjectSet(
+        jsObj, 'imageFile', _articleFileConverter.toIsar(object.imageFile));
+    IsarNative.jsObjectSet(
+        jsObj, 'postedOn', object.postedOn.toUtc().millisecondsSinceEpoch);
+    IsarNative.jsObjectSet(jsObj, 'title', object.title);
+    IsarNative.jsObjectSet(
+        jsObj, 'updatedAt', object.updatedAt.toUtc().millisecondsSinceEpoch);
+    return jsObj;
+  }
+
+  @override
+  Article deserialize(IsarCollection<Article> collection, dynamic jsObj) {
+    final object = Article();
+    object.body = IsarNative.jsObjectGet(jsObj, 'body') ?? '';
+    object.createdAt = IsarNative.jsObjectGet(jsObj, 'createdAt') != null
+        ? DateTime.fromMillisecondsSinceEpoch(
+                IsarNative.jsObjectGet(jsObj, 'createdAt'),
+                isUtc: true)
+            .toLocal()
+        : DateTime.fromMillisecondsSinceEpoch(0);
+    object.id = IsarNative.jsObjectGet(jsObj, 'id');
+    object.imageFile = _articleFileConverter
+        .fromIsar(IsarNative.jsObjectGet(jsObj, 'imageFile'));
+    object.postedOn = IsarNative.jsObjectGet(jsObj, 'postedOn') != null
+        ? DateTime.fromMillisecondsSinceEpoch(
+                IsarNative.jsObjectGet(jsObj, 'postedOn'),
+                isUtc: true)
+            .toLocal()
+        : DateTime.fromMillisecondsSinceEpoch(0);
+    object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
+    object.updatedAt = IsarNative.jsObjectGet(jsObj, 'updatedAt') != null
+        ? DateTime.fromMillisecondsSinceEpoch(
+                IsarNative.jsObjectGet(jsObj, 'updatedAt'),
+                isUtc: true)
+            .toLocal()
+        : DateTime.fromMillisecondsSinceEpoch(0);
+    return object;
+  }
+
+  @override
+  P deserializeProperty<P>(Object jsObj, String propertyName) {
+    switch (propertyName) {
+      case 'body':
+        return (IsarNative.jsObjectGet(jsObj, 'body') ?? '') as P;
+      case 'createdAt':
+        return (IsarNative.jsObjectGet(jsObj, 'createdAt') != null
+            ? DateTime.fromMillisecondsSinceEpoch(
+                    IsarNative.jsObjectGet(jsObj, 'createdAt'),
+                    isUtc: true)
+                .toLocal()
+            : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+      case 'id':
+        return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
+      case 'imageFile':
+        return (_articleFileConverter
+            .fromIsar(IsarNative.jsObjectGet(jsObj, 'imageFile'))) as P;
+      case 'postedOn':
+        return (IsarNative.jsObjectGet(jsObj, 'postedOn') != null
+            ? DateTime.fromMillisecondsSinceEpoch(
+                    IsarNative.jsObjectGet(jsObj, 'postedOn'),
+                    isUtc: true)
+                .toLocal()
+            : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+      case 'title':
+        return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
+      case 'updatedAt':
+        return (IsarNative.jsObjectGet(jsObj, 'updatedAt') != null
+            ? DateTime.fromMillisecondsSinceEpoch(
+                    IsarNative.jsObjectGet(jsObj, 'updatedAt'),
+                    isUtc: true)
+                .toLocal()
+            : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+      default:
+        throw 'Illegal propertyName';
+    }
+  }
+
+  @override
+  void attachLinks(Isar isar, int id, Article object) {}
+}
+
+class _ArticleNativeAdapter extends IsarNativeTypeAdapter<Article> {
+  const _ArticleNativeAdapter();
 
   @override
   void serialize(IsarCollection<Article> collection, IsarRawObject rawObj,
-      Article object, List<int> offsets, AdapterAlloc alloc) {
+      Article object, int staticSize, List<int> offsets, AdapterAlloc alloc) {
     var dynamicSize = 0;
     final value0 = object.body;
-    final _body = BinaryWriter.utf8Encoder.convert(value0);
-    dynamicSize += _body.length;
+    final _body = IsarBinaryWriter.utf8Encoder.convert(value0);
+    dynamicSize += (_body.length) as int;
     final value1 = object.createdAt;
     final _createdAt = value1;
-    final value2 = _ArticleAdapter._fileConverter.toIsar(object.imageFile);
+    final value2 = _articleFileConverter.toIsar(object.imageFile);
     IsarUint8List? _imageFile;
     if (value2 != null) {
-      _imageFile = BinaryWriter.utf8Encoder.convert(value2);
+      _imageFile = IsarBinaryWriter.utf8Encoder.convert(value2);
     }
-    dynamicSize += _imageFile?.length ?? 0;
+    dynamicSize += (_imageFile?.length ?? 0) as int;
     final value3 = object.postedOn;
     final _postedOn = value3;
     final value4 = object.title;
-    final _title = BinaryWriter.utf8Encoder.convert(value4);
-    dynamicSize += _title.length;
+    final _title = IsarBinaryWriter.utf8Encoder.convert(value4);
+    dynamicSize += (_title.length) as int;
     final value5 = object.updatedAt;
     final _updatedAt = value5;
-    final size = dynamicSize + 50;
+    final size = staticSize + dynamicSize;
 
     rawObj.buffer = alloc(size);
     rawObj.buffer_length = size;
-    final buffer = bufAsBytes(rawObj.buffer, size);
-    final writer = BinaryWriter(buffer, 50);
+    final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
+    final writer = IsarBinaryWriter(buffer, staticSize);
     writer.writeBytes(offsets[0], _body);
     writer.writeDateTime(offsets[1], _createdAt);
     writer.writeBytes(offsets[2], _imageFile);
@@ -86,13 +185,13 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
 
   @override
   Article deserialize(IsarCollection<Article> collection, int id,
-      BinaryReader reader, List<int> offsets) {
+      IsarBinaryReader reader, List<int> offsets) {
     final object = Article();
     object.body = reader.readString(offsets[0]);
     object.createdAt = reader.readDateTime(offsets[1]);
     object.id = id;
-    object.imageFile = _ArticleAdapter._fileConverter
-        .fromIsar(reader.readStringOrNull(offsets[2]));
+    object.imageFile =
+        _articleFileConverter.fromIsar(reader.readStringOrNull(offsets[2]));
     object.postedOn = reader.readDateTime(offsets[3]);
     object.title = reader.readString(offsets[4]);
     object.updatedAt = reader.readDateTime(offsets[5]);
@@ -101,7 +200,7 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
 
   @override
   P deserializeProperty<P>(
-      int id, BinaryReader reader, int propertyIndex, int offset) {
+      int id, IsarBinaryReader reader, int propertyIndex, int offset) {
     switch (propertyIndex) {
       case -1:
         return id as P;
@@ -110,8 +209,8 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
       case 1:
         return (reader.readDateTime(offset)) as P;
       case 2:
-        return (_ArticleAdapter._fileConverter
-            .fromIsar(reader.readStringOrNull(offset))) as P;
+        return (_articleFileConverter.fromIsar(reader.readStringOrNull(offset)))
+            as P;
       case 3:
         return (reader.readDateTime(offset)) as P;
       case 4:
@@ -122,6 +221,9 @@ class _ArticleAdapter extends IsarTypeAdapter<Article> {
         throw 'Illegal propertyIndex';
     }
   }
+
+  @override
+  void attachLinks(Isar isar, int id, Article object) {}
 }
 
 extension ArticleQueryWhereSort on QueryBuilder<Article, Article, QWhere> {
@@ -503,7 +605,7 @@ extension ArticleQueryFilter
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
       property: 'imageFile',
-      value: _ArticleAdapter._fileConverter.toIsar(value),
+      value: _articleFileConverter.toIsar(value),
       caseSensitive: caseSensitive,
     ));
   }
@@ -517,7 +619,7 @@ extension ArticleQueryFilter
       type: ConditionType.gt,
       include: include,
       property: 'imageFile',
-      value: _ArticleAdapter._fileConverter.toIsar(value),
+      value: _articleFileConverter.toIsar(value),
       caseSensitive: caseSensitive,
     ));
   }
@@ -531,7 +633,7 @@ extension ArticleQueryFilter
       type: ConditionType.lt,
       include: include,
       property: 'imageFile',
-      value: _ArticleAdapter._fileConverter.toIsar(value),
+      value: _articleFileConverter.toIsar(value),
       caseSensitive: caseSensitive,
     ));
   }
@@ -545,9 +647,9 @@ extension ArticleQueryFilter
   }) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'imageFile',
-      lower: _ArticleAdapter._fileConverter.toIsar(lower),
+      lower: _articleFileConverter.toIsar(lower),
       includeLower: includeLower,
-      upper: _ArticleAdapter._fileConverter.toIsar(upper),
+      upper: _articleFileConverter.toIsar(upper),
       includeUpper: includeUpper,
       caseSensitive: caseSensitive,
     ));
@@ -560,7 +662,7 @@ extension ArticleQueryFilter
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.startsWith,
       property: 'imageFile',
-      value: _ArticleAdapter._fileConverter.toIsar(value),
+      value: _articleFileConverter.toIsar(value),
       caseSensitive: caseSensitive,
     ));
   }
@@ -572,7 +674,7 @@ extension ArticleQueryFilter
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.endsWith,
       property: 'imageFile',
-      value: _ArticleAdapter._fileConverter.toIsar(value),
+      value: _articleFileConverter.toIsar(value),
       caseSensitive: caseSensitive,
     ));
   }
@@ -583,7 +685,7 @@ extension ArticleQueryFilter
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.contains,
       property: 'imageFile',
-      value: _ArticleAdapter._fileConverter.toIsar(value),
+      value: _articleFileConverter.toIsar(value),
       caseSensitive: caseSensitive,
     ));
   }
@@ -798,6 +900,9 @@ extension ArticleQueryFilter
     ));
   }
 }
+
+extension ArticleQueryLinks
+    on QueryBuilder<Article, Article, QFilterCondition> {}
 
 extension ArticleQueryWhereSortBy on QueryBuilder<Article, Article, QSortBy> {
   QueryBuilder<Article, Article, QAfterSortBy> sortByBody() {

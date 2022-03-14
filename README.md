@@ -29,3 +29,11 @@ core_version=`cat .isar_version`
 github="https://github.com/isar/isar-core/releases/download/${core_version}"
 curl "${github}/libisar_macos_x64.dylib" -o ./libisar.dylib --create-dirs -L
 ```
+
+## 特別な操作の必要なライブラリのバージョンアップ
+
+### isar
+
+- pubspec.ymlのisar、isar_flutter_libs、isar_generatorのバージョンを更新
+- .isar_bersionを更新
+- models/*.g.dartの再作成
