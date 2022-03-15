@@ -1,23 +1,10 @@
-# f_diary
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# F Diary
+Flutterを使って作られた、簡単な日記アプリケーションです。
 
 ## 開発
 ### セットアップ
-
+#### Flutter
+[Flutter](https://flutter.dev/)を参照してください。
 #### Isarのインストール
 手元の環境でテストを動かすためにはIsarのコアライブラリをダウンロードする必要があります。
 
@@ -30,9 +17,17 @@ github="https://github.com/isar/isar-core/releases/download/${core_version}"
 curl "${github}/libisar_macos_x64.dylib" -o ./libisar.dylib --create-dirs -L
 ```
 
-## 特別な操作の必要なライブラリのバージョンアップ
+### テスト
+テストを並列実行できるようにIsarを設定できていないので、必ず直列に実行します。
 
-### isar
+```console
+flutter test --concurrency=1
+```
+
+### Dartパッケージのバージョンアップ
+Isarのみ、バージョンを固定しています。
+通常の手順で更新できます。
+#### Isar
 
 - pubspec.ymlのisar、isar_flutter_libs、isar_generatorのバージョンを更新
 - .isar_bersionを更新
