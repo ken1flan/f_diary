@@ -26,7 +26,7 @@ flutter test --concurrency=1
 
 ### Dartパッケージのバージョンアップ
 Isarのみ、バージョンを固定しています。
-通常の手順で更新できます。
+ほかは通常の手順で更新できます。
 #### Isar
 
 - pubspec.ymlのisar、isar_flutter_libs、isar_generatorのバージョンを更新
