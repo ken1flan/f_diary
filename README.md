@@ -17,13 +17,6 @@ github="https://github.com/isar/isar-core/releases/download/${core_version}"
 curl "${github}/libisar_macos_x64.dylib" -o ./libisar.dylib --create-dirs -L
 ```
 
-### テスト
-テストを並列実行できるようにIsarを設定できていないので、必ず直列に実行します。
-
-```console
-flutter test --concurrency=1
-```
-
 ### Dartパッケージのバージョンアップ
 Isarのみ、バージョンを固定しています。
 通常の手順で更新できます。
