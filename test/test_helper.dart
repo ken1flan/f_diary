@@ -17,6 +17,10 @@ class TestHelper {
     tearDown(() {
       IsarSupport.finalize();
     });
+
+    tearDownAll(() {
+      CommonSupport.finalize();
+    });
   }
 
   static Widget wrapWithMaterial(Widget widget) {
