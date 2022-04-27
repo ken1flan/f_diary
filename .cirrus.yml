@@ -20,7 +20,7 @@ test_task:
   # test_script: flutter test --machine > report.json
   test_script: |
     flutter pub get
-    flutter test --concurrency=1 --reporter json | tee report.json
+    flutter test --reporter json | tee report.json
   always:
     report_artifacts:
       path: report.json
