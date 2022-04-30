@@ -19,7 +19,7 @@ curl "${github}/libisar_macos_x64.dylib" -o ./libisar.dylib --create-dirs -L
 
 ### Dartパッケージのバージョンアップ
 Isarのみ、バージョンを固定しています。
-通常の手順で更新できます。
+ほかは通常の手順で更新できます。
 #### Isar
 
 - pubspec.ymlのisar、isar_flutter_libs、isar_generatorのバージョンを更新
