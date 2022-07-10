@@ -14,7 +14,7 @@ Flutterを使って作られた、簡単な日記アプリケーションです�
 ```console
 core_version=`cat .isar_version`
 github="https://github.com/isar/isar-core/releases/download/${core_version}"
-curl "${github}/libisar_macos_x64.dylib" -o ./libisar.dylib --create-dirs -L
+curl "${github}/libisar_macos.dylib" -o ./libisar.dylib --create-dirs -L
 ```
 
 ### Dartパッケージのバージョンアップ
@@ -23,5 +23,5 @@ Isarのみ、バージョンを固定しています。
 #### Isar
 
 - pubspec.ymlのisar、isar_flutter_libs、isar_generatorのバージョンを更新
-- .isar_bersionを更新
+- .isar_versionを更新
 - models/*.g.dartの再作成
