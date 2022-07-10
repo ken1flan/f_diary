@@ -25,3 +25,10 @@ test_task:
     report_artifacts:
       path: report.json
       format: flutter
+
+build_apk_task:
+  pub_cache:
+    folder: ~/.pub-cache
+  build_apk_script: |
+    flutter pub get
+    flutter build apk
