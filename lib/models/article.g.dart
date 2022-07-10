@@ -6,20 +6,16 @@ part of 'article.dart';
 // IsarCollectionGenerator
 // **************************************************************************
 
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, unused_local_variable
 
 extension GetArticleCollection on Isar {
-  IsarCollection<Article> get articles {
-    return getCollection('Article');
-  }
+  IsarCollection<Article> get articles => getCollection();
 }
 
-final ArticleSchema = CollectionSchema(
+const ArticleSchema = CollectionSchema(
   name: 'Article',
   schema:
       '{"name":"Article","idName":"id","properties":[{"name":"body","type":"String"},{"name":"createdAt","type":"Long"},{"name":"imageFile","type":"String"},{"name":"postedOn","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[{"name":"postedOn","unique":false,"properties":[{"name":"postedOn","type":"Value","caseSensitive":false}]}],"links":[]}',
-  nativeAdapter: const _ArticleNativeAdapter(),
-  webAdapter: const _ArticleWebAdapter(),
   idName: 'id',
   propertyIds: {
     'body': 0,
@@ -31,312 +27,297 @@ final ArticleSchema = CollectionSchema(
   },
   listProperties: {},
   indexIds: {'postedOn': 0},
-  indexTypes: {
+  indexValueTypes: {
     'postedOn': [
-      NativeIndexType.long,
+      IndexValueType.long,
     ]
   },
   linkIds: {},
-  backlinkIds: {},
-  linkedCollections: [],
-  getId: (obj) {
-    if (obj.id == Isar.autoIncrement) {
-      return null;
-    } else {
-      return obj.id;
-    }
-  },
-  setId: (obj, id) => obj.id = id,
-  getLinks: (obj) => [],
-  version: 2,
+  backlinkLinkNames: {},
+  getId: _articleGetId,
+  setId: _articleSetId,
+  getLinks: _articleGetLinks,
+  attachLinks: _articleAttachLinks,
+  serializeNative: _articleSerializeNative,
+  deserializeNative: _articleDeserializeNative,
+  deserializePropNative: _articleDeserializePropNative,
+  serializeWeb: _articleSerializeWeb,
+  deserializeWeb: _articleDeserializeWeb,
+  deserializePropWeb: _articleDeserializePropWeb,
+  version: 3,
 );
+
+int? _articleGetId(Article object) {
+  if (object.id == Isar.autoIncrement) {
+    return null;
+  } else {
+    return object.id;
+  }
+}
+
+void _articleSetId(Article object, int id) {
+  object.id = id;
+}
+
+List<IsarLinkBase> _articleGetLinks(Article object) {
+  return [];
+}
 
 const _articleFileConverter = FileConverter();
 
-class _ArticleWebAdapter extends IsarWebTypeAdapter<Article> {
-  const _ArticleWebAdapter();
-
-  @override
-  Object serialize(IsarCollection<Article> collection, Article object) {
-    final jsObj = IsarNative.newJsObject();
-    IsarNative.jsObjectSet(jsObj, 'body', object.body);
-    IsarNative.jsObjectSet(
-        jsObj, 'createdAt', object.createdAt.toUtc().millisecondsSinceEpoch);
-    IsarNative.jsObjectSet(jsObj, 'id', object.id);
-    IsarNative.jsObjectSet(
-        jsObj, 'imageFile', _articleFileConverter.toIsar(object.imageFile));
-    IsarNative.jsObjectSet(
-        jsObj, 'postedOn', object.postedOn.toUtc().millisecondsSinceEpoch);
-    IsarNative.jsObjectSet(jsObj, 'title', object.title);
-    IsarNative.jsObjectSet(
-        jsObj, 'updatedAt', object.updatedAt.toUtc().millisecondsSinceEpoch);
-    return jsObj;
+void _articleSerializeNative(
+    IsarCollection<Article> collection,
+    IsarRawObject rawObj,
+    Article object,
+    int staticSize,
+    List<int> offsets,
+    AdapterAlloc alloc) {
+  var dynamicSize = 0;
+  final value0 = object.body;
+  final _body = IsarBinaryWriter.utf8Encoder.convert(value0);
+  dynamicSize += (_body.length) as int;
+  final value1 = object.createdAt;
+  final _createdAt = value1;
+  final value2 = _articleFileConverter.toIsar(object.imageFile);
+  IsarUint8List? _imageFile;
+  if (value2 != null) {
+    _imageFile = IsarBinaryWriter.utf8Encoder.convert(value2);
   }
+  dynamicSize += (_imageFile?.length ?? 0) as int;
+  final value3 = object.postedOn;
+  final _postedOn = value3;
+  final value4 = object.title;
+  final _title = IsarBinaryWriter.utf8Encoder.convert(value4);
+  dynamicSize += (_title.length) as int;
+  final value5 = object.updatedAt;
+  final _updatedAt = value5;
+  final size = staticSize + dynamicSize;
 
-  @override
-  Article deserialize(IsarCollection<Article> collection, dynamic jsObj) {
-    final object = Article();
-    object.body = IsarNative.jsObjectGet(jsObj, 'body') ?? '';
-    object.createdAt = IsarNative.jsObjectGet(jsObj, 'createdAt') != null
-        ? DateTime.fromMillisecondsSinceEpoch(
-                IsarNative.jsObjectGet(jsObj, 'createdAt'),
-                isUtc: true)
-            .toLocal()
-        : DateTime.fromMillisecondsSinceEpoch(0);
-    object.id = IsarNative.jsObjectGet(jsObj, 'id');
-    object.imageFile = _articleFileConverter
-        .fromIsar(IsarNative.jsObjectGet(jsObj, 'imageFile'));
-    object.postedOn = IsarNative.jsObjectGet(jsObj, 'postedOn') != null
-        ? DateTime.fromMillisecondsSinceEpoch(
-                IsarNative.jsObjectGet(jsObj, 'postedOn'),
-                isUtc: true)
-            .toLocal()
-        : DateTime.fromMillisecondsSinceEpoch(0);
-    object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
-    object.updatedAt = IsarNative.jsObjectGet(jsObj, 'updatedAt') != null
-        ? DateTime.fromMillisecondsSinceEpoch(
-                IsarNative.jsObjectGet(jsObj, 'updatedAt'),
-                isUtc: true)
-            .toLocal()
-        : DateTime.fromMillisecondsSinceEpoch(0);
-    return object;
-  }
-
-  @override
-  P deserializeProperty<P>(Object jsObj, String propertyName) {
-    switch (propertyName) {
-      case 'body':
-        return (IsarNative.jsObjectGet(jsObj, 'body') ?? '') as P;
-      case 'createdAt':
-        return (IsarNative.jsObjectGet(jsObj, 'createdAt') != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                    IsarNative.jsObjectGet(jsObj, 'createdAt'),
-                    isUtc: true)
-                .toLocal()
-            : DateTime.fromMillisecondsSinceEpoch(0)) as P;
-      case 'id':
-        return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
-      case 'imageFile':
-        return (_articleFileConverter
-            .fromIsar(IsarNative.jsObjectGet(jsObj, 'imageFile'))) as P;
-      case 'postedOn':
-        return (IsarNative.jsObjectGet(jsObj, 'postedOn') != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                    IsarNative.jsObjectGet(jsObj, 'postedOn'),
-                    isUtc: true)
-                .toLocal()
-            : DateTime.fromMillisecondsSinceEpoch(0)) as P;
-      case 'title':
-        return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
-      case 'updatedAt':
-        return (IsarNative.jsObjectGet(jsObj, 'updatedAt') != null
-            ? DateTime.fromMillisecondsSinceEpoch(
-                    IsarNative.jsObjectGet(jsObj, 'updatedAt'),
-                    isUtc: true)
-                .toLocal()
-            : DateTime.fromMillisecondsSinceEpoch(0)) as P;
-      default:
-        throw 'Illegal propertyName';
-    }
-  }
-
-  @override
-  void attachLinks(Isar isar, int id, Article object) {}
+  rawObj.buffer = alloc(size);
+  rawObj.buffer_length = size;
+  final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
+  final writer = IsarBinaryWriter(buffer, staticSize);
+  writer.writeBytes(offsets[0], _body);
+  writer.writeDateTime(offsets[1], _createdAt);
+  writer.writeBytes(offsets[2], _imageFile);
+  writer.writeDateTime(offsets[3], _postedOn);
+  writer.writeBytes(offsets[4], _title);
+  writer.writeDateTime(offsets[5], _updatedAt);
 }
 
-class _ArticleNativeAdapter extends IsarNativeTypeAdapter<Article> {
-  const _ArticleNativeAdapter();
-
-  @override
-  void serialize(IsarCollection<Article> collection, IsarRawObject rawObj,
-      Article object, int staticSize, List<int> offsets, AdapterAlloc alloc) {
-    var dynamicSize = 0;
-    final value0 = object.body;
-    final _body = IsarBinaryWriter.utf8Encoder.convert(value0);
-    dynamicSize += (_body.length) as int;
-    final value1 = object.createdAt;
-    final _createdAt = value1;
-    final value2 = _articleFileConverter.toIsar(object.imageFile);
-    IsarUint8List? _imageFile;
-    if (value2 != null) {
-      _imageFile = IsarBinaryWriter.utf8Encoder.convert(value2);
-    }
-    dynamicSize += (_imageFile?.length ?? 0) as int;
-    final value3 = object.postedOn;
-    final _postedOn = value3;
-    final value4 = object.title;
-    final _title = IsarBinaryWriter.utf8Encoder.convert(value4);
-    dynamicSize += (_title.length) as int;
-    final value5 = object.updatedAt;
-    final _updatedAt = value5;
-    final size = staticSize + dynamicSize;
-
-    rawObj.buffer = alloc(size);
-    rawObj.buffer_length = size;
-    final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
-    final writer = IsarBinaryWriter(buffer, staticSize);
-    writer.writeBytes(offsets[0], _body);
-    writer.writeDateTime(offsets[1], _createdAt);
-    writer.writeBytes(offsets[2], _imageFile);
-    writer.writeDateTime(offsets[3], _postedOn);
-    writer.writeBytes(offsets[4], _title);
-    writer.writeDateTime(offsets[5], _updatedAt);
-  }
-
-  @override
-  Article deserialize(IsarCollection<Article> collection, int id,
-      IsarBinaryReader reader, List<int> offsets) {
-    final object = Article();
-    object.body = reader.readString(offsets[0]);
-    object.createdAt = reader.readDateTime(offsets[1]);
-    object.id = id;
-    object.imageFile =
-        _articleFileConverter.fromIsar(reader.readStringOrNull(offsets[2]));
-    object.postedOn = reader.readDateTime(offsets[3]);
-    object.title = reader.readString(offsets[4]);
-    object.updatedAt = reader.readDateTime(offsets[5]);
-    return object;
-  }
-
-  @override
-  P deserializeProperty<P>(
-      int id, IsarBinaryReader reader, int propertyIndex, int offset) {
-    switch (propertyIndex) {
-      case -1:
-        return id as P;
-      case 0:
-        return (reader.readString(offset)) as P;
-      case 1:
-        return (reader.readDateTime(offset)) as P;
-      case 2:
-        return (_articleFileConverter.fromIsar(reader.readStringOrNull(offset)))
-            as P;
-      case 3:
-        return (reader.readDateTime(offset)) as P;
-      case 4:
-        return (reader.readString(offset)) as P;
-      case 5:
-        return (reader.readDateTime(offset)) as P;
-      default:
-        throw 'Illegal propertyIndex';
-    }
-  }
-
-  @override
-  void attachLinks(Isar isar, int id, Article object) {}
+Article _articleDeserializeNative(IsarCollection<Article> collection, int id,
+    IsarBinaryReader reader, List<int> offsets) {
+  final object = Article();
+  object.body = reader.readString(offsets[0]);
+  object.createdAt = reader.readDateTime(offsets[1]);
+  object.id = id;
+  object.imageFile =
+      _articleFileConverter.fromIsar(reader.readStringOrNull(offsets[2]));
+  object.postedOn = reader.readDateTime(offsets[3]);
+  object.title = reader.readString(offsets[4]);
+  object.updatedAt = reader.readDateTime(offsets[5]);
+  return object;
 }
+
+P _articleDeserializePropNative<P>(
+    int id, IsarBinaryReader reader, int propertyIndex, int offset) {
+  switch (propertyIndex) {
+    case -1:
+      return id as P;
+    case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
+      return (reader.readDateTime(offset)) as P;
+    case 2:
+      return (_articleFileConverter.fromIsar(reader.readStringOrNull(offset)))
+          as P;
+    case 3:
+      return (reader.readDateTime(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readDateTime(offset)) as P;
+    default:
+      throw 'Illegal propertyIndex';
+  }
+}
+
+dynamic _articleSerializeWeb(
+    IsarCollection<Article> collection, Article object) {
+  final jsObj = IsarNative.newJsObject();
+  IsarNative.jsObjectSet(jsObj, 'body', object.body);
+  IsarNative.jsObjectSet(
+      jsObj, 'createdAt', object.createdAt.toUtc().millisecondsSinceEpoch);
+  IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(
+      jsObj, 'imageFile', _articleFileConverter.toIsar(object.imageFile));
+  IsarNative.jsObjectSet(
+      jsObj, 'postedOn', object.postedOn.toUtc().millisecondsSinceEpoch);
+  IsarNative.jsObjectSet(jsObj, 'title', object.title);
+  IsarNative.jsObjectSet(
+      jsObj, 'updatedAt', object.updatedAt.toUtc().millisecondsSinceEpoch);
+  return jsObj;
+}
+
+Article _articleDeserializeWeb(
+    IsarCollection<Article> collection, dynamic jsObj) {
+  final object = Article();
+  object.body = IsarNative.jsObjectGet(jsObj, 'body') ?? '';
+  object.createdAt = IsarNative.jsObjectGet(jsObj, 'createdAt') != null
+      ? DateTime.fromMillisecondsSinceEpoch(
+              IsarNative.jsObjectGet(jsObj, 'createdAt'),
+              isUtc: true)
+          .toLocal()
+      : DateTime.fromMillisecondsSinceEpoch(0);
+  object.id = IsarNative.jsObjectGet(jsObj, 'id');
+  object.imageFile = _articleFileConverter
+      .fromIsar(IsarNative.jsObjectGet(jsObj, 'imageFile'));
+  object.postedOn = IsarNative.jsObjectGet(jsObj, 'postedOn') != null
+      ? DateTime.fromMillisecondsSinceEpoch(
+              IsarNative.jsObjectGet(jsObj, 'postedOn'),
+              isUtc: true)
+          .toLocal()
+      : DateTime.fromMillisecondsSinceEpoch(0);
+  object.title = IsarNative.jsObjectGet(jsObj, 'title') ?? '';
+  object.updatedAt = IsarNative.jsObjectGet(jsObj, 'updatedAt') != null
+      ? DateTime.fromMillisecondsSinceEpoch(
+              IsarNative.jsObjectGet(jsObj, 'updatedAt'),
+              isUtc: true)
+          .toLocal()
+      : DateTime.fromMillisecondsSinceEpoch(0);
+  return object;
+}
+
+P _articleDeserializePropWeb<P>(Object jsObj, String propertyName) {
+  switch (propertyName) {
+    case 'body':
+      return (IsarNative.jsObjectGet(jsObj, 'body') ?? '') as P;
+    case 'createdAt':
+      return (IsarNative.jsObjectGet(jsObj, 'createdAt') != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+                  IsarNative.jsObjectGet(jsObj, 'createdAt'),
+                  isUtc: true)
+              .toLocal()
+          : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+    case 'id':
+      return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
+    case 'imageFile':
+      return (_articleFileConverter
+          .fromIsar(IsarNative.jsObjectGet(jsObj, 'imageFile'))) as P;
+    case 'postedOn':
+      return (IsarNative.jsObjectGet(jsObj, 'postedOn') != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+                  IsarNative.jsObjectGet(jsObj, 'postedOn'),
+                  isUtc: true)
+              .toLocal()
+          : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+    case 'title':
+      return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
+    case 'updatedAt':
+      return (IsarNative.jsObjectGet(jsObj, 'updatedAt') != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+                  IsarNative.jsObjectGet(jsObj, 'updatedAt'),
+                  isUtc: true)
+              .toLocal()
+          : DateTime.fromMillisecondsSinceEpoch(0)) as P;
+    default:
+      throw 'Illegal propertyName';
+  }
+}
+
+void _articleAttachLinks(IsarCollection col, int id, Article object) {}
 
 extension ArticleQueryWhereSort on QueryBuilder<Article, Article, QWhere> {
   QueryBuilder<Article, Article, QAfterWhere> anyId() {
-    return addWhereClauseInternal(const WhereClause(indexName: null));
+    return addWhereClauseInternal(const IdWhereClause.any());
   }
 
   QueryBuilder<Article, Article, QAfterWhere> anyPostedOn() {
-    return addWhereClauseInternal(const WhereClause(indexName: 'postedOn'));
+    return addWhereClauseInternal(
+        const IndexWhereClause.any(indexName: 'postedOn'));
   }
 }
 
 extension ArticleQueryWhere on QueryBuilder<Article, Article, QWhereClause> {
-  QueryBuilder<Article, Article, QAfterWhereClause> idEqualTo(int? id) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [id],
+  QueryBuilder<Article, Article, QAfterWhereClause> idEqualTo(int id) {
+    return addWhereClauseInternal(IdWhereClause.between(
+      lower: id,
       includeLower: true,
-      upper: [id],
+      upper: id,
       includeUpper: true,
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterWhereClause> idNotEqualTo(int? id) {
+  QueryBuilder<Article, Article, QAfterWhereClause> idNotEqualTo(int id) {
     if (whereSortInternal == Sort.asc) {
-      return addWhereClauseInternal(WhereClause(
-        indexName: null,
-        upper: [id],
-        includeUpper: false,
-      )).addWhereClauseInternal(WhereClause(
-        indexName: null,
-        lower: [id],
-        includeLower: false,
-      ));
+      return addWhereClauseInternal(
+        IdWhereClause.lessThan(upper: id, includeUpper: false),
+      ).addWhereClauseInternal(
+        IdWhereClause.greaterThan(lower: id, includeLower: false),
+      );
     } else {
-      return addWhereClauseInternal(WhereClause(
-        indexName: null,
-        lower: [id],
-        includeLower: false,
-      )).addWhereClauseInternal(WhereClause(
-        indexName: null,
-        upper: [id],
-        includeUpper: false,
-      ));
+      return addWhereClauseInternal(
+        IdWhereClause.greaterThan(lower: id, includeLower: false),
+      ).addWhereClauseInternal(
+        IdWhereClause.lessThan(upper: id, includeUpper: false),
+      );
     }
   }
 
-  QueryBuilder<Article, Article, QAfterWhereClause> idGreaterThan(
-    int? id, {
-    bool include = false,
-  }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [id],
-      includeLower: include,
-    ));
+  QueryBuilder<Article, Article, QAfterWhereClause> idGreaterThan(int id,
+      {bool include = false}) {
+    return addWhereClauseInternal(
+      IdWhereClause.greaterThan(lower: id, includeLower: include),
+    );
   }
 
-  QueryBuilder<Article, Article, QAfterWhereClause> idLessThan(
-    int? id, {
-    bool include = false,
-  }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      upper: [id],
-      includeUpper: include,
-    ));
+  QueryBuilder<Article, Article, QAfterWhereClause> idLessThan(int id,
+      {bool include = false}) {
+    return addWhereClauseInternal(
+      IdWhereClause.lessThan(upper: id, includeUpper: include),
+    );
   }
 
   QueryBuilder<Article, Article, QAfterWhereClause> idBetween(
-    int? lowerId,
-    int? upperId, {
+    int lowerId,
+    int upperId, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addWhereClauseInternal(WhereClause(
-      indexName: null,
-      lower: [lowerId],
+    return addWhereClauseInternal(IdWhereClause.between(
+      lower: lowerId,
       includeLower: includeLower,
-      upper: [upperId],
+      upper: upperId,
       includeUpper: includeUpper,
     ));
   }
 
   QueryBuilder<Article, Article, QAfterWhereClause> postedOnEqualTo(
       DateTime postedOn) {
-    return addWhereClauseInternal(WhereClause(
+    return addWhereClauseInternal(IndexWhereClause.equalTo(
       indexName: 'postedOn',
-      lower: [postedOn],
-      includeLower: true,
-      upper: [postedOn],
-      includeUpper: true,
+      value: [postedOn],
     ));
   }
 
   QueryBuilder<Article, Article, QAfterWhereClause> postedOnNotEqualTo(
       DateTime postedOn) {
     if (whereSortInternal == Sort.asc) {
-      return addWhereClauseInternal(WhereClause(
+      return addWhereClauseInternal(IndexWhereClause.lessThan(
         indexName: 'postedOn',
         upper: [postedOn],
         includeUpper: false,
-      )).addWhereClauseInternal(WhereClause(
+      )).addWhereClauseInternal(IndexWhereClause.greaterThan(
         indexName: 'postedOn',
         lower: [postedOn],
         includeLower: false,
       ));
     } else {
-      return addWhereClauseInternal(WhereClause(
+      return addWhereClauseInternal(IndexWhereClause.greaterThan(
         indexName: 'postedOn',
         lower: [postedOn],
         includeLower: false,
-      )).addWhereClauseInternal(WhereClause(
+      )).addWhereClauseInternal(IndexWhereClause.lessThan(
         indexName: 'postedOn',
         upper: [postedOn],
         includeUpper: false,
@@ -348,7 +329,7 @@ extension ArticleQueryWhere on QueryBuilder<Article, Article, QWhereClause> {
     DateTime postedOn, {
     bool include = false,
   }) {
-    return addWhereClauseInternal(WhereClause(
+    return addWhereClauseInternal(IndexWhereClause.greaterThan(
       indexName: 'postedOn',
       lower: [postedOn],
       includeLower: include,
@@ -359,7 +340,7 @@ extension ArticleQueryWhere on QueryBuilder<Article, Article, QWhereClause> {
     DateTime postedOn, {
     bool include = false,
   }) {
-    return addWhereClauseInternal(WhereClause(
+    return addWhereClauseInternal(IndexWhereClause.lessThan(
       indexName: 'postedOn',
       upper: [postedOn],
       includeUpper: include,
@@ -372,7 +353,7 @@ extension ArticleQueryWhere on QueryBuilder<Article, Article, QWhereClause> {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
-    return addWhereClauseInternal(WhereClause(
+    return addWhereClauseInternal(IndexWhereClause.between(
       indexName: 'postedOn',
       lower: [lowerPostedOn],
       includeLower: includeLower,
@@ -543,7 +524,7 @@ extension ArticleQueryFilter
     ));
   }
 
-  QueryBuilder<Article, Article, QAfterFilterCondition> idEqualTo(int? value) {
+  QueryBuilder<Article, Article, QAfterFilterCondition> idEqualTo(int value) {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.eq,
       property: 'id',
@@ -552,7 +533,7 @@ extension ArticleQueryFilter
   }
 
   QueryBuilder<Article, Article, QAfterFilterCondition> idGreaterThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -564,7 +545,7 @@ extension ArticleQueryFilter
   }
 
   QueryBuilder<Article, Article, QAfterFilterCondition> idLessThan(
-    int? value, {
+    int value, {
     bool include = false,
   }) {
     return addFilterConditionInternal(FilterCondition(
@@ -576,8 +557,8 @@ extension ArticleQueryFilter
   }
 
   QueryBuilder<Article, Article, QAfterFilterCondition> idBetween(
-    int? lower,
-    int? upper, {
+    int lower,
+    int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
